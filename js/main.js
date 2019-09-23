@@ -1,6 +1,6 @@
 'use strict';
 
-var ADVERT_DATA = {
+var advertData = {
   STRING: ['Лондон', 'Париж', 'Москва', 'Токио', 'Нью-Йорк', 'Рим', 'Барселона', 'Чикаго'],
   TYPE: ['palace', 'flat', 'house', 'bungalo'],
   CHECK_TIME: ['12:00', '13:00', '14:00'],
@@ -16,18 +16,17 @@ var Y_LOCATION = {
   MIN: 130,
   MAX: 630
 };
-var MIN_NUMBER = 1;
 
 var mapsWidth = document.querySelector('.map').offsetWidth;
 var pinsList = document.querySelector('.map__pins');
 var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
 
-var getRandomArrayElement = function (array) {
+var getRandomIndexOutOfArray = function (array) {
   return Math.round(Math.random() * (array.length - 1));
 };
 
 var getRandomNumberWithinRange = function (min, max) {
-  min = Math.ceil(min);
+  min = (min === null) ? 1 : Math.ceil(min);
   max = Math.floor(max);
   return Math.floor(Math.random() * (max - min + 1)) + min;
 };
@@ -51,7 +50,7 @@ var shuffleArray = function (array) {
 var getRandomArray = function (array) {
   var newArray = [];
 
-  for (var i = 0; i < getRandomNumberWithinRange(MIN_NUMBER, array.length); i++) {
+  for (var i = 0; i < getRandomNumberWithinRange(null, array.length); i++) {
     newArray.push(array[i]);
   }
 
@@ -61,19 +60,19 @@ var getRandomArray = function (array) {
 var generateAdvert = function (index) {
   return {
     author: {
-      avatar: 'img/avatars/user' + index + '.png'
+      avatar: 'img/avatars/user0' + (index + 1) + '.png'
     },
     offer: {
-      title: ADVERT_DATA.STRING[getRandomArrayElement(ADVERT_DATA.STRING)],
+      title: advertData.STRING[getRandomIndexOutOfArray(advertData.STRING)],
       address: location.x + ', ' + location.y,
-      price: getRandomNumberWithinRange(MIN_NUMBER, ADVERT_DATA.MAX_PROPERTY_PRICE),
-      type: ADVERT_DATA.TYPE[getRandomArrayElement(ADVERT_DATA.TYPE)],
-      rooms: getRandomNumberWithinRange(MIN_NUMBER, ADVERT_DATA.MAX_PROPERTY_ROOMS),
-      checkin: ADVERT_DATA.CHECK_TIME[getRandomArrayElement(ADVERT_DATA.CHECK_TIME)],
-      checkout: ADVERT_DATA.CHECK_TIME[getRandomArrayElement(ADVERT_DATA.CHECK_TIME)],
-      features: getRandomArray(ADVERT_DATA.FEATURES),
-      description: ADVERT_DATA.STRING[getRandomArrayElement(ADVERT_DATA.STRING)],
-      photos: getRandomArray(ADVERT_DATA.PHOTO)
+      price: getRandomNumberWithinRange(null, advertData.MAX_PROPERTY_PRICE),
+      type: advertData.TYPE[getRandomIndexOutOfArray(advertData.TYPE)],
+      rooms: getRandomNumberWithinRange(null, advertData.MAX_PROPERTY_ROOMS),
+      checkin: advertData.CHECK_TIME[getRandomIndexOutOfArray(advertData.CHECK_TIME)],
+      checkout: advertData.CHECK_TIME[getRandomIndexOutOfArray(advertData.CHECK_TIME)],
+      features: getRandomArray(advertData.FEATURES),
+      description: advertData.STRING[getRandomIndexOutOfArray(advertData.STRING)],
+      photos: getRandomArray(advertData.PHOTO)
     },
     location: {
       x: getRandomNumberWithinRange(PIN_WIDTH / 2, mapsWidth - PIN_WIDTH).toString(),
@@ -94,16 +93,17 @@ var generateAdvertsList = function () {
 
 var renderMapPin = function (pin) {
   var pinElement = pinTemplate.cloneNode(true);
+  var pinElementImg = pinElement.querySelector('img');
 
   pinElement.style.left = pin.location.x + 'px';
   pinElement.style.top = pin.location.y + 'px';
-  pinElement.src = pin.author.avatar;
-  pinElement.alt = pin.offer.title;
+  pinElementImg.src = pin.author.avatar;
+  pinElementImg.alt = pin.offer.title;
 
   return pinElement;
 };
 
-var reanderPinsList = function (pinsGeneratedData) {
+var renderPinsList = function (pinsGeneratedData) {
   var fragment = document.createDocumentFragment();
 
   pinsGeneratedData.forEach(function (pin) {
@@ -113,6 +113,6 @@ var reanderPinsList = function (pinsGeneratedData) {
   pinsList.appendChild(fragment);
 };
 
-reanderPinsList(generateAdvertsList());
+renderPinsList(generateAdvertsList());
 
 document.querySelector('.map').classList.remove('map--faded');
