@@ -1,13 +1,18 @@
 'use strict';
 
 var advertData = {
-  STRING: ['Лондон', 'Париж', 'Москва', 'Токио', 'Нью-Йорк', 'Рим', 'Барселона', 'Чикаго'],
+  TITLE: ['Лондон', 'Париж', 'Москва', 'Токио', 'Нью-Йорк', 'Рим', 'Барселона', 'Чикаго'],
   TYPE: ['palace', 'flat', 'house', 'bungalo'],
   CHECK_TIME: ['12:00', '13:00', '14:00'],
   FEATURES: ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'],
+  DESCRIPTION: ['Lorem ipsum dolor sit amet, consectetur adipiscing elit', 'Excepteur sint occaecat cupidatat non proident, sunt in culpa', 'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore'],
   PHOTO: ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg'],
-  MAX_PROPERTY_PRICE: 5000,
-  MAX_PROPERTY_ROOMS: 15,
+};
+
+var propertyParams = {
+  MAX_PRICE: 5000,
+  MAX_ROOMS: 15,
+  MAX_GUESTS: 10
 };
 
 var LENGTH_OF_GENERATED_ARRAY = 8;
@@ -17,9 +22,24 @@ var Y_LOCATION = {
   MAX: 630
 };
 
+var typePropertyParams = {
+  'palace': 'Дворец',
+  'flat': 'Квартира',
+  'house': 'Дом',
+  'bungalo': 'Бунгало'
+};
+
+var imgParams = {
+  WIDTH: 45,
+  HEIGHT: 45,
+  ALT: 'Фотография жилья'
+};
+
 var mapsWidth = document.querySelector('.map').offsetWidth;
 var pinsList = document.querySelector('.map__pins');
 var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
+var map = document.querySelector('.map');
+var cardTemplate = document.querySelector('#card').content.querySelector('.map__card');
 
 var getRandomIndexOutOfArray = function (array) {
   return Math.round(Math.random() * (array.length - 1));
@@ -58,25 +78,30 @@ var getRandomArray = function (array) {
 };
 
 var generateAdvert = function (index) {
+
+  var addressX = getRandomNumberWithinRange(PIN_WIDTH / 2, mapsWidth - PIN_WIDTH).toString();
+  var addressY = getRandomNumberWithinRange(Y_LOCATION.MIN, Y_LOCATION.MAX).toString();
+
   return {
     author: {
       avatar: 'img/avatars/user0' + (index + 1) + '.png'
     },
     offer: {
-      title: advertData.STRING[getRandomIndexOutOfArray(advertData.STRING)],
-      address: location.x + ', ' + location.y,
-      price: getRandomNumberWithinRange(null, advertData.MAX_PROPERTY_PRICE),
+      title: advertData.TITLE[getRandomIndexOutOfArray(advertData.TITLE)],
+      address: addressX + ', ' + addressY,
+      price: getRandomNumberWithinRange(null, propertyParams.MAX_PRICE),
       type: advertData.TYPE[getRandomIndexOutOfArray(advertData.TYPE)],
-      rooms: getRandomNumberWithinRange(null, advertData.MAX_PROPERTY_ROOMS),
+      rooms: getRandomNumberWithinRange(null, propertyParams.MAX_ROOMS),
+      guests: getRandomNumberWithinRange(null, propertyParams.MAX_GUESTS),
       checkin: advertData.CHECK_TIME[getRandomIndexOutOfArray(advertData.CHECK_TIME)],
       checkout: advertData.CHECK_TIME[getRandomIndexOutOfArray(advertData.CHECK_TIME)],
       features: getRandomArray(advertData.FEATURES),
-      description: advertData.STRING[getRandomIndexOutOfArray(advertData.STRING)],
+      description: advertData.DESCRIPTION[getRandomIndexOutOfArray(advertData.DESCRIPTION)],
       photos: getRandomArray(advertData.PHOTO)
     },
     location: {
-      x: getRandomNumberWithinRange(PIN_WIDTH / 2, mapsWidth - PIN_WIDTH).toString(),
-      y: getRandomNumberWithinRange(Y_LOCATION.MIN, Y_LOCATION.MAX).toString()
+      x: addressX,
+      y: addressY
     }
   };
 };
@@ -113,6 +138,76 @@ var renderPinsList = function (pinsGeneratedData) {
   pinsList.appendChild(fragment);
 };
 
+var clearElementsList = function (element, elementSelector) {
+  var listToClean = element.querySelector(elementSelector);
+  listToClean.innerHTML = '';
+};
+
+var generateFeatureElement = function (el) {
+  var li = document.createElement('li');
+  li.classList.add('popup__feature');
+  li.classList.add('popup__feature--' + el);
+
+  return li;
+};
+
+var generateFeaturesList = function (element, featuresArray) {
+  var ul = element.querySelector('.popup__features');
+
+  for (var i = 0; i < featuresArray.length; i++) {
+    ul.appendChild(generateFeatureElement(featuresArray[i]));
+  }
+
+  return ul;
+};
+
+var generatePhotoElement = function (el) {
+  var img = document.createElement('img');
+  img.classList.add('popup__photo');
+  img.src = el;
+  img.width = imgParams.WIDTH;
+  img.height = imgParams.HEIGHT;
+  img.alt = imgParams.ALT;
+
+  return img;
+};
+
+var generatePhotosList = function (element, photosArray) {
+  var imgList = element.querySelector('.popup__photos');
+
+  for (var i = 0; i < photosArray.length; i++) {
+    imgList.appendChild(generatePhotoElement(photosArray[i]));
+  }
+
+  return imgList;
+};
+
+var generateCard = function (card) {
+  var cardElement = cardTemplate.cloneNode(true);
+  clearElementsList(cardElement, '.popup__features');
+  clearElementsList(cardElement, '.popup__photos');
+
+  cardElement.querySelector('.popup__title').textContent = card.offer.title;
+  cardElement.querySelector('.popup__text--address').textContent = card.offer.address;
+  cardElement.querySelector('.popup__text--price').textContent = card.offer.price + '₽/ночь';
+  cardElement.querySelector('.popup__type').textContent = typePropertyParams[card.offer.type];
+  cardElement.querySelector('.popup__text--capacity').textContent = card.offer.rooms + ' комнаты для ' + card.offer.guests + ' гостей';
+  cardElement.querySelector('.popup__text--time').textContent = 'Заезд после ' + card.offer.checkin + ', ' + 'выезд до ' + card.offer.checkout;
+  generateFeaturesList(cardElement, card.offer.features);
+  cardElement.querySelector('.popup__description').textContent = card.offer.description;
+  generatePhotosList(cardElement, card.offer.photos);
+  cardElement.querySelector('.popup__avatar').src = card.author.avatar;
+
+  return cardElement;
+};
+
+var renderCard = function () {
+  var dataArray = generateAdvertsList();
+  map.insertBefore(generateCard(dataArray[0]), document.querySelector('.map__filters-container'));
+};
+
 renderPinsList(generateAdvertsList());
+renderCard();
 
 document.querySelector('.map').classList.remove('map--faded');
+
