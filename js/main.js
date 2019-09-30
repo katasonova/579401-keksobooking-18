@@ -22,6 +22,8 @@ var Y_LOCATION = {
   MAX: 630
 };
 
+var ENTER_KEYCODE = 13;
+
 var typePropertyParams = {
   'palace': 'Дворец',
   'flat': 'Квартира',
@@ -40,6 +42,9 @@ var pinsList = document.querySelector('.map__pins');
 var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
 var map = document.querySelector('.map');
 var cardTemplate = document.querySelector('#card').content.querySelector('.map__card');
+var filtersForm = document.querySelector('.map__filters')
+var mainPin = document.querySelector('.map__pin--main');
+
 
 var getRandomIndexOutOfArray = function (array) {
   return Math.round(Math.random() * (array.length - 1));
@@ -206,8 +211,45 @@ var renderCard = function () {
   map.insertBefore(generateCard(dataArray[0]), document.querySelector('.map__filters-container'));
 };
 
-renderPinsList(generateAdvertsList());
-renderCard();
+var disableFormElements = function () {
+  var allFieldsets = document.querySelectorAll('.ad-form__element');
 
-document.querySelector('.map').classList.remove('map--faded');
+  allFieldsets.forEach(function (element) {
+    element.disabled = true;;
+  })
+};
+
+filtersForm.classList.add('ad-form--disabled');
+
+disableFormElements();
+
+var pinClickHandler = function () {
+  document.querySelector('.map').classList.remove('map--faded');
+  document.querySelector('.ad-form').classList.remove('ad-form--disabled');
+  filtersForm.classList.remove('ad-form--disabled');
+  var allFieldsets = document.querySelectorAll('.ad-form__element');
+
+  allFieldsets.forEach(function (element) {
+    element.disabled = false;;
+  })
+};
+
+var setAddress = function () {
+
+};
+
+mainPin.addEventListener('mousedown', function() {
+  pinClickHandler();
+  setAddress();
+});
+
+document.addEventListener('keydown', function (evt) {
+  if (evt.keyCode === ENTER_KEYCODE) {
+    pinClickHandler();
+  }
+});
+
+//renderPinsList(generateAdvertsList());
+//renderCard();
+
 
