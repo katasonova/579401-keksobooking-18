@@ -24,6 +24,12 @@ var Y_LOCATION = {
 
 var ENTER_KEYCODE = 13;
 
+var pinSize = {
+  WIDTH: 65,
+  HEIGHT: 65,
+  POINTY_END_HEIGHT: 22
+};
+
 var typePropertyParams = {
   'palace': 'Дворец',
   'flat': 'Квартира',
@@ -234,13 +240,34 @@ var pinClickHandler = function () {
   })
 };
 
-var setAddress = function () {
+var getDefaultAddress = function () {
+  //var position = mainPin.getBoundingClientRect();
+ return {
+  x: parseInt(mainPin.style.left) - pinSize.WIDTH / 2,
+  y: parseInt(mainPin.style.top) - pinSize.HEIGHT / 2
+  // x: position.left - pinSize.WIDTH / 2,
+  // y: position.top - pinSize.HEIGHT / 2
+ };
+};
 
+var setAddress = function (coords) {
+  var addressInput = document.querySelector('#address');
+  addressInput.value = coords.x + ', ' + coords.y;
+};
+
+setAddress(getDefaultAddress());
+
+
+var getAddress = function () {
+  return {
+    x: parseInt(mainPin.style.left) - pinSize.WIDTH / 2,
+    y: parseInt(mainPin.style.top) + pinSize.POINTY_END_HEIGHT
+  };
 };
 
 mainPin.addEventListener('mousedown', function() {
   pinClickHandler();
-  setAddress();
+  setAddress(getAddress());
 });
 
 document.addEventListener('keydown', function (evt) {
