@@ -276,7 +276,63 @@ document.addEventListener('keydown', function (evt) {
   }
 });
 
+
+// //var roomsList = document.querySelector('#room_number').querySelectorAll('option');
+
+var deselectAllOptions = function (array) {
+  array.forEach(function (element) {
+    element.selected = false;;
+  })
+};
+
+var disableAllOptions = function (array) {
+  array.forEach(function (element) {
+    element.disabled = true;;
+  })
+};
+
+var roomsAndGuests = {
+  1: ['1'],
+  2: ['1', '2'],
+  3: ['1', '2', '3'],
+  100: ['0']
+};
+
+var rooms = document.querySelector('#room_number');
+
+var checkAvailability = function () {
+  var roomsList = rooms.querySelectorAll('option');
+  var guestsList = document.querySelector('#capacity').querySelectorAll('option');
+
+  var selectedRoom;
+  var selectedGuestsNumber;
+
+  roomsList.forEach(function (room) {
+    if (room.selected) {
+      selectedRoom = room.value;
+    }
+  });
+
+  guestsList.forEach(function (guest) {
+    if (guest.selected) {
+      selectedGuestsNumber = guest.value;
+    }
+  });
+
+  for (var i = 0; i < roomsAndGuests[selectedRoom].length; i++) {
+    roomsAndGuests[selectedRoom][i].disabled = !(roomsAndGuests[selectedRoom].includes(roomsAndGuests[selectedRoom][i].value));
+  }
+  // roomsAndGuests[selectedRoom].forEach(function (guest) {
+  //   guest.disabled = !roomsAndGuests[selectedRoom].includes(guest.value);
+  // })
+
+
+  if (!roomsAndGuests[selectedRoom].includes(selectedGuestsNumber)) {
+    selectedGuestsNumber = roomsAndGuests[selectedRoom][0];
+  }
+};
+
+rooms.addEventListener('change', checkAvailability);
+
 //renderPinsList(generateAdvertsList());
 //renderCard();
-
-
