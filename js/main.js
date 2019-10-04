@@ -48,8 +48,9 @@ var pinsList = document.querySelector('.map__pins');
 var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
 var map = document.querySelector('.map');
 var cardTemplate = document.querySelector('#card').content.querySelector('.map__card');
-var filtersForm = document.querySelector('.map__filters')
+var filtersForm = document.querySelector('.map__filters');
 var mainPin = document.querySelector('.map__pin--main');
+var rooms = document.querySelector('#room_number');
 
 
 var getRandomIndexOutOfArray = function (array) {
@@ -221,8 +222,8 @@ var disableFormElements = function () {
   var allFieldsets = document.querySelectorAll('.ad-form__element');
 
   allFieldsets.forEach(function (element) {
-    element.disabled = true;;
-  })
+    element.disabled = true;
+  });
 };
 
 filtersForm.classList.add('ad-form--disabled');
@@ -236,18 +237,18 @@ var pinClickHandler = function () {
   var allFieldsets = document.querySelectorAll('.ad-form__element');
 
   allFieldsets.forEach(function (element) {
-    element.disabled = false;;
-  })
+    element.disabled = false;
+  });
+
+  renderPinsList(generateAdvertsList());
+  renderCard();
 };
 
 var getDefaultAddress = function () {
-  //var position = mainPin.getBoundingClientRect();
- return {
-  x: parseInt(mainPin.style.left) - pinSize.WIDTH / 2,
-  y: parseInt(mainPin.style.top) - pinSize.HEIGHT / 2
-  // x: position.left - pinSize.WIDTH / 2,
-  // y: position.top - pinSize.HEIGHT / 2
- };
+  return {
+    x: parseInt(mainPin.style.left, 10) - pinSize.WIDTH / 2,
+    y: parseInt(mainPin.style.top, 10) - pinSize.HEIGHT / 2
+  };
 };
 
 var setAddress = function (coords) {
@@ -257,15 +258,14 @@ var setAddress = function (coords) {
 
 setAddress(getDefaultAddress());
 
-
 var getAddress = function () {
   return {
-    x: parseInt(mainPin.style.left) - pinSize.WIDTH / 2,
-    y: parseInt(mainPin.style.top) + pinSize.POINTY_END_HEIGHT
+    x: parseInt(mainPin.style.left, 10) - pinSize.WIDTH / 2,
+    y: parseInt(mainPin.style.top, 10) + pinSize.POINTY_END_HEIGHT
   };
 };
 
-mainPin.addEventListener('mousedown', function() {
+mainPin.addEventListener('mousedown', function () {
   pinClickHandler();
   setAddress(getAddress());
 });
@@ -276,21 +276,6 @@ document.addEventListener('keydown', function (evt) {
   }
 });
 
-
-// //var roomsList = document.querySelector('#room_number').querySelectorAll('option');
-
-var deselectAllOptions = function (array) {
-  array.forEach(function (element) {
-    element.selected = false;;
-  })
-};
-
-var disableAllOptions = function (array) {
-  array.forEach(function (element) {
-    element.disabled = true;;
-  })
-};
-
 var roomsAndGuests = {
   1: ['1'],
   2: ['1', '2'],
@@ -298,41 +283,20 @@ var roomsAndGuests = {
   100: ['0']
 };
 
-var rooms = document.querySelector('#room_number');
-
 var checkAvailability = function () {
-  var roomsList = rooms.querySelectorAll('option');
-  var guestsList = document.querySelector('#capacity').querySelectorAll('option');
+  var guests = document.querySelector('#capacity');
+  var guestsList = guests.querySelectorAll('option');
 
-  var selectedRoom;
-  var selectedGuestsNumber;
-
-  roomsList.forEach(function (room) {
-    if (room.selected) {
-      selectedRoom = room.value;
-    }
-  });
+  var selectedRoom = rooms.value;
+  var selectedGuestsNumber = guests.value;
 
   guestsList.forEach(function (guest) {
-    if (guest.selected) {
-      selectedGuestsNumber = guest.value;
-    }
+    guest.disabled = !roomsAndGuests[selectedRoom].includes(guest.value);
   });
 
-  for (var i = 0; i < roomsAndGuests[selectedRoom].length; i++) {
-    roomsAndGuests[selectedRoom][i].disabled = !(roomsAndGuests[selectedRoom].includes(roomsAndGuests[selectedRoom][i].value));
-  }
-  // roomsAndGuests[selectedRoom].forEach(function (guest) {
-  //   guest.disabled = !roomsAndGuests[selectedRoom].includes(guest.value);
-  // })
-
-
   if (!roomsAndGuests[selectedRoom].includes(selectedGuestsNumber)) {
-    selectedGuestsNumber = roomsAndGuests[selectedRoom][0];
+    guests.value = roomsAndGuests[selectedRoom][0];
   }
 };
 
 rooms.addEventListener('change', checkAvailability);
-
-//renderPinsList(generateAdvertsList());
-//renderCard();
