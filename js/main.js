@@ -228,8 +228,6 @@ var disableFormElements = function () {
 
 filtersForm.classList.add('ad-form--disabled');
 
-disableFormElements();
-
 var pinClickHandler = function () {
   document.querySelector('.map').classList.remove('map--faded');
   document.querySelector('.ad-form').classList.remove('ad-form--disabled');
@@ -244,6 +242,13 @@ var pinClickHandler = function () {
   renderCard();
 };
 
+ var buttonPinClickHandler = function () {
+  pinClickHandler();
+  setAddress(getAddress());
+
+  mainPin.removeEventListener(buttonPinClickHandler);
+ };
+
 var getDefaultAddress = function () {
   return {
     x: parseInt(mainPin.style.left, 10) - pinSize.WIDTH / 2,
@@ -256,8 +261,6 @@ var setAddress = function (coords) {
   addressInput.value = coords.x + ', ' + coords.y;
 };
 
-setAddress(getDefaultAddress());
-
 var getAddress = function () {
   return {
     x: parseInt(mainPin.style.left, 10) - pinSize.WIDTH / 2,
@@ -265,12 +268,16 @@ var getAddress = function () {
   };
 };
 
-mainPin.addEventListener('mousedown', function () {
-  pinClickHandler();
-  setAddress(getAddress());
-});
+// mainPin.addEventListener('mousedown', function () {
+//   pinClickHandler();
+//   setAddress(getAddress());
 
-document.addEventListener('keydown', function (evt) {
+//   mainPin.removeEventListener(pinClickHandler);
+// });
+
+mainPin.addEventListener('mousedown', buttonPinClickHandler);
+
+mainPin.addEventListener('keydown', function (evt) {
   if (evt.keyCode === ENTER_KEYCODE) {
     pinClickHandler();
   }
@@ -300,3 +307,6 @@ var checkAvailability = function () {
 };
 
 rooms.addEventListener('change', checkAvailability);
+
+disableFormElements();
+setAddress(getDefaultAddress());
