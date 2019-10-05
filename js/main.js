@@ -226,8 +226,6 @@ var disableFormElements = function () {
   });
 };
 
-filtersForm.classList.add('ad-form--disabled');
-
 var pinClickHandler = function () {
   document.querySelector('.map').classList.remove('map--faded');
   document.querySelector('.ad-form').classList.remove('ad-form--disabled');
@@ -242,12 +240,17 @@ var pinClickHandler = function () {
   renderCard();
 };
 
- var buttonPinClickHandler = function () {
+var buttonPinClickHandler = function (evt) {
   pinClickHandler();
   setAddress(getAddress());
 
-  mainPin.removeEventListener(buttonPinClickHandler);
- };
+  if (evt.keyCode === ENTER_KEYCODE) {
+    pinClickHandler();
+  }
+
+  mainPin.removeEventListener('mousedown', buttonPinClickHandler);
+  mainPin.removeEventListener('keydown', buttonPinClickHandler);
+};
 
 var getDefaultAddress = function () {
   return {
@@ -267,21 +270,6 @@ var getAddress = function () {
     y: parseInt(mainPin.style.top, 10) + pinSize.POINTY_END_HEIGHT
   };
 };
-
-// mainPin.addEventListener('mousedown', function () {
-//   pinClickHandler();
-//   setAddress(getAddress());
-
-//   mainPin.removeEventListener(pinClickHandler);
-// });
-
-mainPin.addEventListener('mousedown', buttonPinClickHandler);
-
-mainPin.addEventListener('keydown', function (evt) {
-  if (evt.keyCode === ENTER_KEYCODE) {
-    pinClickHandler();
-  }
-});
 
 var roomsAndGuests = {
   1: ['1'],
@@ -306,6 +294,10 @@ var checkAvailability = function () {
   }
 };
 
+filtersForm.classList.add('ad-form--disabled');
+
+mainPin.addEventListener('mousedown', buttonPinClickHandler);
+mainPin.addEventListener('keydown', buttonPinClickHandler);
 rooms.addEventListener('change', checkAvailability);
 
 disableFormElements();
