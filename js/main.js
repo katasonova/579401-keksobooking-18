@@ -22,6 +22,14 @@ var Y_LOCATION = {
   MAX: 630
 };
 
+var ENTER_KEYCODE = 13;
+
+var pinSize = {
+  WIDTH: 65,
+  HEIGHT: 65,
+  POINTY_END_HEIGHT: 22
+};
+
 var typePropertyParams = {
   'palace': 'Дворец',
   'flat': 'Квартира',
@@ -40,6 +48,10 @@ var pinsList = document.querySelector('.map__pins');
 var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
 var map = document.querySelector('.map');
 var cardTemplate = document.querySelector('#card').content.querySelector('.map__card');
+var filtersForm = document.querySelector('.map__filters');
+var mainPin = document.querySelector('.map__pin--main');
+var rooms = document.querySelector('#room_number');
+
 
 var getRandomIndexOutOfArray = function (array) {
   return Math.round(Math.random() * (array.length - 1));
@@ -206,8 +218,87 @@ var renderCard = function () {
   map.insertBefore(generateCard(dataArray[0]), document.querySelector('.map__filters-container'));
 };
 
-renderPinsList(generateAdvertsList());
-renderCard();
+var disableFormElements = function () {
+  var allFieldsets = document.querySelectorAll('.ad-form__element');
 
-document.querySelector('.map').classList.remove('map--faded');
+  allFieldsets.forEach(function (element) {
+    element.disabled = true;
+  });
+};
 
+var pinClickHandler = function () {
+  document.querySelector('.map').classList.remove('map--faded');
+  document.querySelector('.ad-form').classList.remove('ad-form--disabled');
+  filtersForm.classList.remove('ad-form--disabled');
+  var allFieldsets = document.querySelectorAll('.ad-form__element');
+
+  allFieldsets.forEach(function (element) {
+    element.disabled = false;
+  });
+
+  renderPinsList(generateAdvertsList());
+  renderCard();
+};
+
+var buttonPinClickHandler = function (evt) {
+  pinClickHandler();
+  setAddress(getAddress());
+
+  if (evt.keyCode === ENTER_KEYCODE) {
+    pinClickHandler();
+  }
+
+  mainPin.removeEventListener('mousedown', buttonPinClickHandler);
+  mainPin.removeEventListener('keydown', buttonPinClickHandler);
+};
+
+var getDefaultAddress = function () {
+  return {
+    x: parseInt(mainPin.style.left, 10) - pinSize.WIDTH / 2,
+    y: parseInt(mainPin.style.top, 10) - pinSize.HEIGHT / 2
+  };
+};
+
+var setAddress = function (coords) {
+  var addressInput = document.querySelector('#address');
+  addressInput.value = coords.x + ', ' + coords.y;
+};
+
+var getAddress = function () {
+  return {
+    x: parseInt(mainPin.style.left, 10) - pinSize.WIDTH / 2,
+    y: parseInt(mainPin.style.top, 10) + pinSize.POINTY_END_HEIGHT
+  };
+};
+
+var roomsAndGuests = {
+  1: ['1'],
+  2: ['1', '2'],
+  3: ['1', '2', '3'],
+  100: ['0']
+};
+
+var checkAvailability = function () {
+  var guests = document.querySelector('#capacity');
+  var guestsList = guests.querySelectorAll('option');
+
+  var selectedRoom = rooms.value;
+  var selectedGuestsNumber = guests.value;
+
+  guestsList.forEach(function (guest) {
+    guest.disabled = !roomsAndGuests[selectedRoom].includes(guest.value);
+  });
+
+  if (!roomsAndGuests[selectedRoom].includes(selectedGuestsNumber)) {
+    guests.value = roomsAndGuests[selectedRoom][0];
+  }
+};
+
+filtersForm.classList.add('ad-form--disabled');
+
+mainPin.addEventListener('mousedown', buttonPinClickHandler);
+mainPin.addEventListener('keydown', buttonPinClickHandler);
+rooms.addEventListener('change', checkAvailability);
+
+disableFormElements();
+setAddress(getDefaultAddress());
