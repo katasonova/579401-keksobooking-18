@@ -23,6 +23,7 @@ var Y_LOCATION = {
 };
 
 var ENTER_KEYCODE = 13;
+var ESC_KEYCODE = 27;
 
 var pinSize = {
   WIDTH: 65,
@@ -128,6 +129,10 @@ var generateAdvertsList = function () {
   return generatedAdverts;
 };
 
+var openCardPinClickHandler = function () {
+  renderCard();
+};
+
 var renderMapPin = function (pin) {
   var pinElement = pinTemplate.cloneNode(true);
   var pinElementImg = pinElement.querySelector('img');
@@ -136,6 +141,7 @@ var renderMapPin = function (pin) {
   pinElement.style.top = pin.location.y + 'px';
   pinElementImg.src = pin.author.avatar;
   pinElementImg.alt = pin.offer.title;
+  pinElement.addEventListener('click', openCardPinClickHandler);
 
   return pinElement;
 };
@@ -210,13 +216,24 @@ var generateCard = function (card) {
   generatePhotosList(cardElement, card.offer.photos);
   cardElement.querySelector('.popup__avatar').src = card.author.avatar;
 
+  cardElement.querySelector('.popup__close').addEventListener('click', function (evt) {
+    cardElement.remove();
+  });
+
+  cardElement.querySelector('.popup__close').addEventListener('keydown', function (evt) {
+    if (evt.keyCode === ESC_KEYCODE) {
+      cardElement.remove();
+    }
+  });
+
   return cardElement;
 };
 
 var renderCard = function () {
-  var dataArray = generateAdvertsList();
-  map.insertBefore(generateCard(dataArray[0]), document.querySelector('.map__filters-container'));
+ var dataArray = generateAdvertsList();
+    map.insertBefore(generateCard(dataArray[0]), document.querySelector('.map__filters-container'));
 };
+
 
 var disableFormElements = function () {
   var allFieldsets = document.querySelectorAll('.ad-form__element');
@@ -237,7 +254,6 @@ var pinClickHandler = function () {
   });
 
   renderPinsList(generateAdvertsList());
-  renderCard();
 };
 
 var buttonPinClickHandler = function (evt) {
