@@ -142,6 +142,11 @@ var renderMapPin = function (pin) {
   pinElementImg.src = pin.author.avatar;
   pinElementImg.alt = pin.offer.title;
   pinElement.addEventListener('click', openCardPinClickHandler);
+  pinElement.addEventListener('keydown', function (evt) {
+    if (evt.keyCode === ENTER_KEYCODE) {
+      openCardPinClickHandler();
+    }
+  });
 
   return pinElement;
 };
@@ -216,7 +221,7 @@ var generateCard = function (card) {
   generatePhotosList(cardElement, card.offer.photos);
   cardElement.querySelector('.popup__avatar').src = card.author.avatar;
 
-  cardElement.querySelector('.popup__close').addEventListener('click', function (evt) {
+  cardElement.querySelector('.popup__close').addEventListener('click', function () {
     cardElement.remove();
   });
 
@@ -233,7 +238,6 @@ var renderCard = function () {
  var dataArray = generateAdvertsList();
     map.insertBefore(generateCard(dataArray[0]), document.querySelector('.map__filters-container'));
 };
-
 
 var disableFormElements = function () {
   var allFieldsets = document.querySelectorAll('.ad-form__element');
