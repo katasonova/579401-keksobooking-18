@@ -141,7 +141,7 @@ var renderMapPin = function (pin) {
   pinElement.style.top = pin.location.y + 'px';
   pinElementImg.src = pin.author.avatar;
   pinElementImg.alt = pin.offer.title;
-  pinElement.addEventListener('click', openCardPinClickHandler);
+ // pinElement.addEventListener('click', openCardPinClickHandler);
   pinElement.addEventListener('keydown', function (evt) {
     if (evt.keyCode === ENTER_KEYCODE) {
       openCardPinClickHandler();
@@ -155,7 +155,7 @@ var renderPinsList = function (pinsGeneratedData) {
   var fragment = document.createDocumentFragment();
 
   pinsGeneratedData.forEach(function (pin) {
-    fragment.appendChild(renderMapPin(pin));
+    fragment.appendChild(renderMapPin(pin).addEventListener('click', openCardPinClickHandler));
   });
 
   pinsList.appendChild(fragment);
@@ -319,6 +319,35 @@ filtersForm.classList.add('ad-form--disabled');
 mainPin.addEventListener('mousedown', buttonPinClickHandler);
 mainPin.addEventListener('keydown', buttonPinClickHandler);
 rooms.addEventListener('change', checkAvailability);
+
+
+var formTitleInput = document.querySelector('#title');
+var formSubmitButton = document.querySelector('.ad-form__submit');
+
+formTitleInput.required = true;
+
+formSubmitButton.addEventListener('invalid', function (evt) {
+  if (formTitleInput.validity.tooShort) {
+    formTitleInput.setCustomValidity('Имя должно состоять минимум из 30-ти символов');
+  } else if (formTitleInput.validity.tooLong) {
+    formTitleInput.setCustomValidity('Имя не должно превышать 100 символов');
+  } else if (formTitleInput.validity.valueMissing) {
+    formTitleInput.setCustomValidity('Обязательное поле');
+  } else {
+    formTitleInput.setCustomValidity('');
+  }
+});
+
+formSubmitButton.addEventListener('submit', function (evt) {
+  var target = evt.target;
+  if (target.value.length < 30) {
+    target.setCustomValidity('Имя должно состоять минимум из 30-ти символов');
+  }
+  if (target.value.length > 100) {
+    target.setCustomValidity('Имя не должно превышать 100 символов');
+  }
+  target.setCustomValidity('');
+});
 
 disableFormElements();
 setAddress(getDefaultAddress());
