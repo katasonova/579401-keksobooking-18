@@ -232,7 +232,7 @@ var closeCardButtonClickHandler = function (evt) {
   }
 
   document.removeEventListener('keydown', closeCardButtonClickHandler);
-}
+};
 
 var removeCard = function () {
   if (currentCard) {
@@ -241,10 +241,10 @@ var removeCard = function () {
 };
 
 var renderCard = function (advertElement) {
-    removeCard();
+  removeCard();
 
-    currentCard = generateCard(advertElement);
-    map.insertBefore(currentCard, document.querySelector('.map__filters-container'));
+  currentCard = generateCard(advertElement);
+  map.insertBefore(currentCard, document.querySelector('.map__filters-container'));
 };
 
 var disableFormElements = function () {
@@ -328,11 +328,9 @@ mainPin.addEventListener('mousedown', buttonPinClickHandler);
 mainPin.addEventListener('keydown', buttonPinClickHandler);
 rooms.addEventListener('change', checkAvailability);
 
-var formSubmitButton = document.querySelector('.ad-form__submit');
-
 var formTitleInput = document.querySelector('#title');
 formTitleInput.required = true;
-formTitleInput.addEventListener('invalid', function (evt) {
+formTitleInput.addEventListener('invalid', function () {
   if (formTitleInput.validity.tooShort) {
     formTitleInput.setCustomValidity('Заголовок объявления должен состоять минимум из 30-ти символов');
   } else if (formTitleInput.validity.tooLong) {
@@ -346,13 +344,36 @@ formTitleInput.addEventListener('invalid', function (evt) {
 
 var formPriceInput = document.querySelector('#price');
 formPriceInput.required = true;
-formPriceInput.addEventListener('invalid', function (evt) {
+formPriceInput.addEventListener('invalid', function () {
   if (formPriceInput.validity.rangeOverflow) {
     formPriceInput.setCustomValidity('Стоимость аренды за ночь не может превышать 1000000 руб.');
-  }else if (formPriceInput.validity.valueMissing) {
+  } else if (formPriceInput.validity.valueMissing) {
     formPriceInput.setCustomValidity('Обязательное поле');
   } else {
     formPriceInput.setCustomValidity('');
+  }
+});
+
+var formPropertyTypeSelector = document.querySelector('#type');
+formPriceInput.placeholder = '1000';
+formPropertyTypeSelector.addEventListener('change', function () {
+  switch (formPropertyTypeSelector.value) {
+    case 'bungalo':
+      formPriceInput.min = 0;
+      formPriceInput.placeholder = '0';
+      break;
+    case 'flat':
+      formPriceInput.min = 1000;
+      formPriceInput.placeholder = '1000';
+      break;
+    case 'house':
+      formPriceInput.min = 5000;
+      formPriceInput.placeholder = '5000';
+      break;
+    case 'palace':
+      formPriceInput.min = 10000;
+      formPriceInput.placeholder = '10000';
+      break;
   }
 });
 
