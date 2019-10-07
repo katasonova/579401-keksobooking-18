@@ -328,23 +328,36 @@ mainPin.addEventListener('mousedown', buttonPinClickHandler);
 mainPin.addEventListener('keydown', buttonPinClickHandler);
 rooms.addEventListener('change', checkAvailability);
 
-
-var formTitleInput = document.querySelector('#title');
 var formSubmitButton = document.querySelector('.ad-form__submit');
 
+var formTitleInput = document.querySelector('#title');
 formTitleInput.required = true;
-
 formTitleInput.addEventListener('invalid', function (evt) {
   if (formTitleInput.validity.tooShort) {
-    formTitleInput.setCustomValidity('Имя должно состоять минимум из 30-ти символов');
+    formTitleInput.setCustomValidity('Заголовок объявления должен состоять минимум из 30-ти символов');
   } else if (formTitleInput.validity.tooLong) {
-    formTitleInput.setCustomValidity('Имя не должно превышать 100 символов');
+    formTitleInput.setCustomValidity('Заголовок объявления не должен превышать 100 символов');
   } else if (formTitleInput.validity.valueMissing) {
     formTitleInput.setCustomValidity('Обязательное поле');
   } else {
     formTitleInput.setCustomValidity('');
   }
 });
+
+var formPriceInput = document.querySelector('#price');
+formPriceInput.required = true;
+formPriceInput.addEventListener('invalid', function (evt) {
+  if (formPriceInput.validity.rangeOverflow) {
+    formPriceInput.setCustomValidity('Стоимость аренды за ночь не может превышать 1000000 руб.');
+  }else if (formPriceInput.validity.valueMissing) {
+    formPriceInput.setCustomValidity('Обязательное поле');
+  } else {
+    formPriceInput.setCustomValidity('');
+  }
+});
+
+var formAddressInput = document.querySelector('#address');
+formAddressInput.readOnly = true;
 
 disableFormElements();
 setAddress(getDefaultAddress());
