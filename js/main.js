@@ -52,6 +52,7 @@ var cardTemplate = document.querySelector('#card').content.querySelector('.map__
 var filtersForm = document.querySelector('.map__filters');
 var mainPin = document.querySelector('.map__pin--main');
 var rooms = document.querySelector('#room_number');
+var currentCard;
 
 
 var getRandomIndexOutOfArray = function (array) {
@@ -129,22 +130,20 @@ var generateAdvertsList = function () {
   return generatedAdverts;
 };
 
-var openCardPinClickHandler = function () {
-  renderCard();
-};
-
-var renderMapPin = function (pin) {
+var renderMapPin = function (advertElement) {
   var pinElement = pinTemplate.cloneNode(true);
   var pinElementImg = pinElement.querySelector('img');
 
-  pinElement.style.left = pin.location.x + 'px';
-  pinElement.style.top = pin.location.y + 'px';
-  pinElementImg.src = pin.author.avatar;
-  pinElementImg.alt = pin.offer.title;
- // pinElement.addEventListener('click', openCardPinClickHandler);
+  pinElement.style.left = advertElement.location.x + 'px';
+  pinElement.style.top = advertElement.location.y + 'px';
+  pinElementImg.src = advertElement.author.avatar;
+  pinElementImg.alt = advertElement.offer.title;
+  pinElement.addEventListener('click', function () {
+    renderCard(advertElement);
+  });
   pinElement.addEventListener('keydown', function (evt) {
     if (evt.keyCode === ENTER_KEYCODE) {
-      openCardPinClickHandler();
+      renderCard(advertElement);
     }
   });
 
@@ -155,7 +154,7 @@ var renderPinsList = function (pinsGeneratedData) {
   var fragment = document.createDocumentFragment();
 
   pinsGeneratedData.forEach(function (pin) {
-    fragment.appendChild(renderMapPin(pin).addEventListener('click', openCardPinClickHandler));
+    fragment.appendChild(renderMapPin(pin));
   });
 
   pinsList.appendChild(fragment);
@@ -221,22 +220,31 @@ var generateCard = function (card) {
   generatePhotosList(cardElement, card.offer.photos);
   cardElement.querySelector('.popup__avatar').src = card.author.avatar;
 
-  cardElement.querySelector('.popup__close').addEventListener('click', function () {
-    cardElement.remove();
-  });
-
-  cardElement.querySelector('.popup__close').addEventListener('keydown', function (evt) {
-    if (evt.keyCode === ESC_KEYCODE) {
-      cardElement.remove();
-    }
-  });
+  cardElement.querySelector('.popup__close').addEventListener('click', removeCard);
+  document.addEventListener('keydown', closeCardButtonClickHandler);
 
   return cardElement;
 };
 
-var renderCard = function () {
- var dataArray = generateAdvertsList();
-    map.insertBefore(generateCard(dataArray[0]), document.querySelector('.map__filters-container'));
+var closeCardButtonClickHandler = function (evt) {
+  if (evt.keyCode === ESC_KEYCODE) {
+    removeCard();
+  }
+
+  document.removeEventListener('keydown', closeCardButtonClickHandler);
+}
+
+var removeCard = function () {
+  if (currentCard) {
+    currentCard.remove();
+  }
+};
+
+var renderCard = function (advertElement) {
+    removeCard();
+
+    currentCard = generateCard(advertElement);
+    map.insertBefore(currentCard, document.querySelector('.map__filters-container'));
 };
 
 var disableFormElements = function () {
@@ -326,7 +334,7 @@ var formSubmitButton = document.querySelector('.ad-form__submit');
 
 formTitleInput.required = true;
 
-formSubmitButton.addEventListener('invalid', function (evt) {
+formTitleInput.addEventListener('invalid', function (evt) {
   if (formTitleInput.validity.tooShort) {
     formTitleInput.setCustomValidity('Имя должно состоять минимум из 30-ти символов');
   } else if (formTitleInput.validity.tooLong) {
@@ -336,17 +344,6 @@ formSubmitButton.addEventListener('invalid', function (evt) {
   } else {
     formTitleInput.setCustomValidity('');
   }
-});
-
-formSubmitButton.addEventListener('submit', function (evt) {
-  var target = evt.target;
-  if (target.value.length < 30) {
-    target.setCustomValidity('Имя должно состоять минимум из 30-ти символов');
-  }
-  if (target.value.length > 100) {
-    target.setCustomValidity('Имя не должно превышать 100 символов');
-  }
-  target.setCustomValidity('');
 });
 
 disableFormElements();
