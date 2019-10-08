@@ -52,6 +52,8 @@ var cardTemplate = document.querySelector('#card').content.querySelector('.map__
 var filtersForm = document.querySelector('.map__filters');
 var mainPin = document.querySelector('.map__pin--main');
 var rooms = document.querySelector('#room_number');
+var formCheckInSelector = document.querySelector('#timein');
+var formCheckOutSelector = document.querySelector('#timeout');
 var currentCard;
 
 
@@ -265,6 +267,7 @@ var pinClickHandler = function () {
     element.disabled = false;
   });
 
+  checkAvailability();
   renderPinsList(generateAdvertsList());
 };
 
@@ -330,12 +333,18 @@ rooms.addEventListener('change', checkAvailability);
 
 var formTitleInput = document.querySelector('#title');
 formTitleInput.required = true;
-formTitleInput.addEventListener('invalid', function () {
+formTitleInput.addEventListener('input', function () {
   if (formTitleInput.validity.tooShort) {
     formTitleInput.setCustomValidity('Заголовок объявления должен состоять минимум из 30-ти символов');
   } else if (formTitleInput.validity.tooLong) {
     formTitleInput.setCustomValidity('Заголовок объявления не должен превышать 100 символов');
-  } else if (formTitleInput.validity.valueMissing) {
+  } else {
+    formTitleInput.setCustomValidity('');
+  }
+});
+
+formTitleInput.addEventListener('invaid', function () {
+  if (formTitleInput.validity.valueMissing) {
     formTitleInput.setCustomValidity('Обязательное поле');
   } else {
     formTitleInput.setCustomValidity('');
@@ -344,13 +353,19 @@ formTitleInput.addEventListener('invalid', function () {
 
 var formPriceInput = document.querySelector('#price');
 formPriceInput.required = true;
-formPriceInput.addEventListener('invalid', function () {
+formPriceInput.addEventListener('input', function () {
   if (formPriceInput.validity.rangeOverflow) {
     formPriceInput.setCustomValidity('Стоимость аренды за ночь не может превышать 1000000 руб.');
-  } else if (formPriceInput.validity.valueMissing) {
-    formPriceInput.setCustomValidity('Обязательное поле');
   } else {
     formPriceInput.setCustomValidity('');
+  }
+});
+
+formPriceInput.addEventListener('invaid', function () {
+  if (formPriceInput.validity.valueMissing) {
+    formPriceInput.setCustomValidity('Обязательное поле');
+  } else {
+    formTitleInput.setCustomValidity('');
   }
 });
 
@@ -379,6 +394,18 @@ formPropertyTypeSelector.addEventListener('change', function () {
 
 var formAddressInput = document.querySelector('#address');
 formAddressInput.readOnly = true;
+
+
+var checkInSelectChangeHandler = function () {
+  formCheckOutSelector.value = formCheckInSelector.value;
+};
+
+var checkOutSelectChangeHandler = function () {
+  formCheckInSelector.value = formCheckOutSelector.value;
+};
+
+formCheckInSelector.addEventListener('change', checkInSelectChangeHandler);
+formCheckOutSelector.addEventListener('change', checkOutSelectChangeHandler);
 
 disableFormElements();
 setAddress(getDefaultAddress());
