@@ -23,6 +23,7 @@ var Y_LOCATION = {
 };
 
 var ENTER_KEYCODE = 13;
+var ESC_KEYCODE = 27;
 
 var pinSize = {
   WIDTH: 65,
@@ -51,6 +52,9 @@ var cardTemplate = document.querySelector('#card').content.querySelector('.map__
 var filtersForm = document.querySelector('.map__filters');
 var mainPin = document.querySelector('.map__pin--main');
 var rooms = document.querySelector('#room_number');
+var formCheckInSelector = document.querySelector('#timein');
+var formCheckOutSelector = document.querySelector('#timeout');
+var currentCard;
 
 
 var getRandomIndexOutOfArray = function (array) {
@@ -128,14 +132,22 @@ var generateAdvertsList = function () {
   return generatedAdverts;
 };
 
-var renderMapPin = function (pin) {
+var renderMapPin = function (advertElement) {
   var pinElement = pinTemplate.cloneNode(true);
   var pinElementImg = pinElement.querySelector('img');
 
-  pinElement.style.left = pin.location.x + 'px';
-  pinElement.style.top = pin.location.y + 'px';
-  pinElementImg.src = pin.author.avatar;
-  pinElementImg.alt = pin.offer.title;
+  pinElement.style.left = advertElement.location.x + 'px';
+  pinElement.style.top = advertElement.location.y + 'px';
+  pinElementImg.src = advertElement.author.avatar;
+  pinElementImg.alt = advertElement.offer.title;
+  pinElement.addEventListener('click', function () {
+    renderCard(advertElement);
+  });
+  pinElement.addEventListener('keydown', function (evt) {
+    if (evt.keyCode === ENTER_KEYCODE) {
+      renderCard(advertElement);
+    }
+  });
 
   return pinElement;
 };
@@ -210,12 +222,31 @@ var generateCard = function (card) {
   generatePhotosList(cardElement, card.offer.photos);
   cardElement.querySelector('.popup__avatar').src = card.author.avatar;
 
+  cardElement.querySelector('.popup__close').addEventListener('click', removeCard);
+  document.addEventListener('keydown', closeCardButtonClickHandler);
+
   return cardElement;
 };
 
-var renderCard = function () {
-  var dataArray = generateAdvertsList();
-  map.insertBefore(generateCard(dataArray[0]), document.querySelector('.map__filters-container'));
+var closeCardButtonClickHandler = function (evt) {
+  if (evt.keyCode === ESC_KEYCODE) {
+    removeCard();
+  }
+
+  document.removeEventListener('keydown', closeCardButtonClickHandler);
+};
+
+var removeCard = function () {
+  if (currentCard) {
+    currentCard.remove();
+  }
+};
+
+var renderCard = function (advertElement) {
+  removeCard();
+
+  currentCard = generateCard(advertElement);
+  map.insertBefore(currentCard, document.querySelector('.map__filters-container'));
 };
 
 var disableFormElements = function () {
@@ -236,8 +267,8 @@ var pinClickHandler = function () {
     element.disabled = false;
   });
 
+  checkAvailability();
   renderPinsList(generateAdvertsList());
-  renderCard();
 };
 
 var buttonPinClickHandler = function (evt) {
@@ -299,6 +330,50 @@ filtersForm.classList.add('ad-form--disabled');
 mainPin.addEventListener('mousedown', buttonPinClickHandler);
 mainPin.addEventListener('keydown', buttonPinClickHandler);
 rooms.addEventListener('change', checkAvailability);
+
+var formTitleInput = document.querySelector('#title');
+formTitleInput.required = true;
+
+var formPriceInput = document.querySelector('#price');
+formPriceInput.required = true;
+
+var formPropertyTypeSelector = document.querySelector('#type');
+formPriceInput.placeholder = '1000';
+formPropertyTypeSelector.addEventListener('change', function () {
+  switch (formPropertyTypeSelector.value) {
+    case 'bungalo':
+      formPriceInput.min = 0;
+      formPriceInput.placeholder = '0';
+      break;
+    case 'flat':
+      formPriceInput.min = 1000;
+      formPriceInput.placeholder = '1000';
+      break;
+    case 'house':
+      formPriceInput.min = 5000;
+      formPriceInput.placeholder = '5000';
+      break;
+    case 'palace':
+      formPriceInput.min = 10000;
+      formPriceInput.placeholder = '10000';
+      break;
+  }
+});
+
+var formAddressInput = document.querySelector('#address');
+formAddressInput.readOnly = true;
+
+
+var checkInSelectChangeHandler = function () {
+  formCheckOutSelector.value = formCheckInSelector.value;
+};
+
+var checkOutSelectChangeHandler = function () {
+  formCheckInSelector.value = formCheckOutSelector.value;
+};
+
+formCheckInSelector.addEventListener('change', checkInSelectChangeHandler);
+formCheckOutSelector.addEventListener('change', checkOutSelectChangeHandler);
 
 disableFormElements();
 setAddress(getDefaultAddress());
