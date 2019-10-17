@@ -1,18 +1,6 @@
 'use strict';
 
 (function () {
-  window.data = {
-    generateAdvertsList: function () {
-      var generatedAdverts = [];
-
-      for (var i = 0; i < LENGTH_OF_GENERATED_ARRAY; i++) {
-        generatedAdverts.push(generateAdvert(i));
-      }
-
-      return generatedAdverts;
-    }
-  };
-
   var advertData = {
     TITLE: ['Лондон', 'Париж', 'Москва', 'Токио', 'Нью-Йорк', 'Рим', 'Барселона', 'Чикаго'],
     TYPE: ['palace', 'flat', 'house', 'bungalo'],
@@ -100,5 +88,17 @@
         y: addressY
       }
     };
+  };
+
+  window.data = {
+    generateAdvertsList: function () {
+      var generatedAdverts = [];
+
+      for (var i = 0; i < LENGTH_OF_GENERATED_ARRAY; i++) {
+        generatedAdverts.push(generateAdvert(i));
+      }
+
+      return generatedAdverts;
+    }
   };
 })();

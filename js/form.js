@@ -3,7 +3,7 @@
 (function () {
 
   window.form = {
-    checkAvailability: function () {
+    setAvailability: function () {
       var guests = document.querySelector('#capacity');
       var guestsList = guests.querySelectorAll('option');
 
@@ -24,23 +24,23 @@
     },
     getAddress: function () {
       return {
-        x: parseInt(window.form.mainPin.style.left, 10) - pinSize.WIDTH / 2,
-        y: parseInt(window.form.mainPin.style.top, 10) + pinSize.POINTY_END_HEIGHT
+        x: window.pin.getAddressX(),
+        y: window.pin.getAddressY()
       };
     },
     filtersForm: document.querySelector('.map__filters'),
-    mainPin: document.querySelector('.map__pin--main')
+    // mainPin: document.querySelector('.map__pin--main')
   };
 
   var rooms = document.querySelector('#room_number');
   var formCheckInSelector = document.querySelector('#timein');
   var formCheckOutSelector = document.querySelector('#timeout');
 
-  var pinSize = {
-    WIDTH: 65,
-    HEIGHT: 65,
-    POINTY_END_HEIGHT: 22
-  };
+  // var pinSize = {
+  //   WIDTH: 65,
+  //   HEIGHT: 65,
+  //   POINTY_END_HEIGHT: 22
+  // };
 
   var disableFormElements = function () {
     var allFieldsets = document.querySelectorAll('.ad-form__element');
@@ -52,8 +52,8 @@
 
   var getDefaultAddress = function () {
     return {
-      x: parseInt(window.form.mainPin.style.left, 10) - pinSize.WIDTH / 2,
-      y: parseInt(window.form.mainPin.style.top, 10) - pinSize.HEIGHT / 2
+      x: window.pin.getAddressX(),
+      y: window.pin.getDefaultAddressY()
     };
   };
 
@@ -66,7 +66,7 @@
 
   window.form.filtersForm.classList.add('ad-form--disabled');
 
-  rooms.addEventListener('change', window.form.checkAvailability);
+  rooms.addEventListener('change', window.form.setAvailability);
 
   var formTitleInput = document.querySelector('#title');
   formTitleInput.required = true;
