@@ -4,19 +4,20 @@
   var map = document.querySelector('.map');
   var currentCard;
 
-var removeCard = function () {
+  var removeCard = function () {
     if (currentCard) {
       currentCard.remove();
     }
   };
 
-var closeCardButtonClickHandler = function (evt) {
+  var closeCardButtonClickHandler = function (evt) {
+    var ESC_KEYCODE = 27;
     if (evt.keyCode === ESC_KEYCODE) {
       removeCard();
     }
 
     document.removeEventListener('keydown', closeCardButtonClickHandler);
-};
+  };
 
   var generateCard = function (card) {
     var cardElement = cardTemplate.cloneNode(true);
