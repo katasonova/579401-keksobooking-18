@@ -102,7 +102,7 @@
 
 
   window.card = {
-    renderCard: function (advertElement) {
+    render: function (advertElement) {
       removeCard();
 
       currentCard = generateCard(advertElement);

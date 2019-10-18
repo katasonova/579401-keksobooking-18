@@ -90,7 +90,7 @@
 
   window.form = {
     setAvailability: setAvailability,
-    enableForm: function () {
+    enable: function () {
       filtersForm.classList.remove('ad-form--disabled');
     }
   };

@@ -13,12 +13,12 @@
     pinElementImg.src = advertElement.author.avatar;
     pinElementImg.alt = advertElement.offer.title;
     pinElement.addEventListener('click', function () {
-      window.card.renderCard(advertElement);
+      window.card.render(advertElement);
     });
     pinElement.addEventListener('keydown', function (evt) {
       var ENTER_KEYCODE = 13;
       if (evt.keyCode === ENTER_KEYCODE) {
-        window.card.renderCard(advertElement);
+        window.card.render(advertElement);
       }
     });
 

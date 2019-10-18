@@ -13,7 +13,7 @@
     document.querySelector('.ad-form').classList.remove('ad-form--disabled');
     var allFieldsets = document.querySelectorAll('.ad-form__element');
 
-    window.form.enableForm();
+    window.form.enable();
 
     allFieldsets.forEach(function (element) {
       element.disabled = false;
