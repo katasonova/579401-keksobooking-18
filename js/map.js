@@ -7,6 +7,21 @@
     POINTY_END_HEIGHT: 22
   };
 
+  var searchArea = {
+    Y: {
+      RANGE: {
+        MIN: 130,
+        MAX: 630
+      }
+    },
+    X: {
+      RANGE: {
+        MIN: 0,
+        MAX: document.body.offsetWidth - pinSize.WIDTH,
+      }
+    }
+  };
+
   var mainPin = document.querySelector('.map__pin--main');
 
   var pinClickHandler = function () {
@@ -53,11 +68,11 @@
         y: moveEvt.clientY
       };
 
-      mainPin.style.top = (mainPin.offsetTop - shift.y) + 'px';
-      mainPin.style.left = (mainPin.offsetLeft - shift.x) + 'px';
+      mainPin.style.top = Math.max(searchArea.Y.RANGE.MIN, Math.min(mainPin.offsetTop - shift.y, searchArea.Y.RANGE.MAX)) + 'px';
+      mainPin.style.left = Math.max(searchArea.X.RANGE.MIN, Math.min(mainPin.offsetLeft - shift.x, searchArea.X.RANGE.MAX)) + 'px';
     };
 
-    var buttonPinMouseUpHandler = function (upEvt) {
+    var buttonPinMouseUpHandler = function () {
 
       pinClickHandler();
       window.form.setActiveAddress();
@@ -82,8 +97,8 @@
     },
     calculateCurrentAddress: function () {
       return {
-        x: parseInt(mainPin.style.left, 10) - pinSize.WIDTH / 2,
-        y: parseInt(mainPin.style.top, 10) + pinSize.POINTY_END_HEIGHT
+        x: parseInt(mainPin.style.left, 10),
+        y: parseInt(mainPin.style.top, 10)
       };
     }
   };
