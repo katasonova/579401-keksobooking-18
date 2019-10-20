@@ -1,10 +1,26 @@
 'use strict';
 
 (function () {
+  var roomsAndGuests = {
+    1: ['1'],
+    2: ['1', '2'],
+    3: ['1', '2', '3'],
+    100: ['0']
+  };
+
   var rooms = document.querySelector('#room_number');
   var formCheckInSelector = document.querySelector('#timein');
   var formCheckOutSelector = document.querySelector('#timeout');
   var filtersForm = document.querySelector('.map__filters');
+  var formAddressInput = document.querySelector('#address');
+  var formTitleInput = document.querySelector('#title');
+  var formPriceInput = document.querySelector('#price');
+  var formPropertyTypeSelector = document.querySelector('#type');
+
+  formAddressInput.readOnly = true;
+  formTitleInput.required = true;
+  formPriceInput.required = true;
+  formPriceInput.placeholder = '1000';
 
   var getDefaultAddress = function () {
     return window.map.calculateDefualtAddress();
@@ -27,15 +43,6 @@
     });
   };
 
-  var roomsAndGuests = {
-    1: ['1'],
-    2: ['1', '2'],
-    3: ['1', '2', '3'],
-    100: ['0']
-  };
-
-  filtersForm.classList.add('ad-form--disabled');
-
   var setAvailability = function () {
     var guests = document.querySelector('#capacity');
     var guestsList = guests.querySelectorAll('option');
@@ -52,16 +59,6 @@
     }
   };
 
-  rooms.addEventListener('change', setAvailability);
-
-  var formTitleInput = document.querySelector('#title');
-  formTitleInput.required = true;
-
-  var formPriceInput = document.querySelector('#price');
-  formPriceInput.required = true;
-
-  var formPropertyTypeSelector = document.querySelector('#type');
-  formPriceInput.placeholder = '1000';
   formPropertyTypeSelector.addEventListener('change', function () {
     switch (formPropertyTypeSelector.value) {
       case 'bungalo':
@@ -83,10 +80,6 @@
     }
   });
 
-  var formAddressInput = document.querySelector('#address');
-  formAddressInput.readOnly = true;
-
-
   var checkInSelectChangeHandler = function () {
     formCheckOutSelector.value = formCheckInSelector.value;
   };
@@ -95,9 +88,10 @@
     formCheckInSelector.value = formCheckOutSelector.value;
   };
 
+  filtersForm.classList.add('ad-form--disabled');
+  rooms.addEventListener('change', setAvailability);
   formCheckInSelector.addEventListener('change', checkInSelectChangeHandler);
   formCheckOutSelector.addEventListener('change', checkOutSelectChangeHandler);
-
   disableFormElements();
   setAddress(getDefaultAddress());
 
