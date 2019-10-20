@@ -6,6 +6,7 @@
     HEIGHT: 65,
     POINTY_END_HEIGHT: 22
   };
+
   var mainPin = document.querySelector('.map__pin--main');
 
   var pinClickHandler = function () {
@@ -24,6 +25,8 @@
   };
 
   var buttonPinClickHandler = function (evt) {
+    evt.preventDefault();
+
     var ENTER_KEYCODE = 13;
     pinClickHandler();
     window.form.setActiveAddress();
@@ -32,11 +35,43 @@
       pinClickHandler();
     }
 
-    mainPin.removeEventListener('mousedown', buttonPinClickHandler);
-    mainPin.removeEventListener('keydown', buttonPinClickHandler);
+    var startCoords = {
+      x: evt.clientX,
+      y: evt.clientY
+    };
+
+    var buttonPinMouseMoveHandler = function (moveEvt) {
+      moveEvt.preventDefault();
+
+      var shift = {
+        x: startCoords.x - moveEvt.clientX,
+        y: startCoords.y - moveEvt.clientY
+      };
+
+      startCoords = {
+        x: moveEvt.clientX,
+        y: moveEvt.clientY
+      };
+
+      mainPin.style.top = (mainPin.offsetTop - shift.y) + 'px';
+      mainPin.style.left = (mainPin.offsetLeft - shift.x) + 'px';
+    };
+
+    var buttonPinMouseUpHandler = function (upEvt) {
+      upEvt.preventDefault();
+
+      //mainPin.removeEventListener('mousedown', buttonPinClickHandler);
+      document.removeEventListener('mouseup', buttonPinMouseUpHandler);
+      document.removeEventListener('mousemove', buttonPinMouseMoveHandler);
+
+      mainPin.removeEventListener('keydown', buttonPinClickHandler);
+    };
+
+    document.addEventListener('mousemove', buttonPinMouseMoveHandler);
+    document.addEventListener('mouseup', buttonPinMouseUpHandler);
   };
 
-  mainPin.addEventListener('mousedown', buttonPinClickHandler);
+  mainPin.addEventListener('mousedown', buttonPinClickHandler)
   mainPin.addEventListener('keydown', buttonPinClickHandler);
 
   window.map = {
