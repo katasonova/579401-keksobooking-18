@@ -27,7 +27,7 @@
   var pinClickHandler = function () {
     if (document.querySelector('.map').classList.contains('map--faded')) {
       window.pin.renderPinsList(window.data.generateAdvertsList());
-    };
+    }
 
     document.querySelector('.map').classList.remove('map--faded');
     document.querySelector('.ad-form').classList.remove('ad-form--disabled');
@@ -85,7 +85,7 @@
     document.addEventListener('mouseup', buttonPinMouseUpHandler);
   };
 
-  mainPin.addEventListener('mousedown', buttonPinClickHandler)
+  mainPin.addEventListener('mousedown', buttonPinClickHandler);
   mainPin.addEventListener('keydown', buttonPinKeyDownHandler);
 
   window.map = {
