@@ -10,6 +10,10 @@
   var mainPin = document.querySelector('.map__pin--main');
 
   var pinClickHandler = function () {
+    if (document.querySelector('.map').classList.contains('map--faded')) {
+      window.pin.renderPinsList(window.data.generateAdvertsList());
+    };
+
     document.querySelector('.map').classList.remove('map--faded');
     document.querySelector('.ad-form').classList.remove('ad-form--disabled');
     var allFieldsets = document.querySelectorAll('.ad-form__element');
@@ -21,28 +25,24 @@
     });
 
     window.form.setAvailability();
-    window.pin.renderPinsList(window.data.generateAdvertsList());
   };
 
-  var buttonPinClickHandler = function (evt) {
-    evt.preventDefault();
-
+  var buttonPinKeyDownHandler = function (evt) {
     var ENTER_KEYCODE = 13;
-    pinClickHandler();
-    window.form.setActiveAddress();
-
     if (evt.keyCode === ENTER_KEYCODE) {
       pinClickHandler();
     }
 
+    mainPin.removeEventListener('keydown', buttonPinKeyDownHandler);
+  };
+
+  var buttonPinClickHandler = function (evt) {
     var startCoords = {
       x: evt.clientX,
       y: evt.clientY
     };
 
     var buttonPinMouseMoveHandler = function (moveEvt) {
-      moveEvt.preventDefault();
-
       var shift = {
         x: startCoords.x - moveEvt.clientX,
         y: startCoords.y - moveEvt.clientY
@@ -58,13 +58,12 @@
     };
 
     var buttonPinMouseUpHandler = function (upEvt) {
-      upEvt.preventDefault();
 
-      //mainPin.removeEventListener('mousedown', buttonPinClickHandler);
+      pinClickHandler();
+      window.form.setActiveAddress();
+
       document.removeEventListener('mouseup', buttonPinMouseUpHandler);
       document.removeEventListener('mousemove', buttonPinMouseMoveHandler);
-
-      mainPin.removeEventListener('keydown', buttonPinClickHandler);
     };
 
     document.addEventListener('mousemove', buttonPinMouseMoveHandler);
@@ -72,7 +71,7 @@
   };
 
   mainPin.addEventListener('mousedown', buttonPinClickHandler)
-  mainPin.addEventListener('keydown', buttonPinClickHandler);
+  mainPin.addEventListener('keydown', buttonPinKeyDownHandler);
 
   window.map = {
     calculateDefualtAddress: function () {
