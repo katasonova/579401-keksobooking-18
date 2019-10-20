@@ -23,29 +23,10 @@
     window.pin.renderPinsList(window.data.generateAdvertsList());
   };
 
-  var getDefaultAddress = function () {
-    return {
-      x: parseInt(mainPin.style.left, 10) - pinSize.WIDTH / 2,
-      y: parseInt(mainPin.style.top, 10) - pinSize.HEIGHT / 2
-    };
-  };
-
-  var setAddress = function (coords) {
-    var addressInput = document.querySelector('#address');
-    addressInput.value = coords.x + ', ' + coords.y;
-  };
-
-  var getAddress = function () {
-    return {
-      x: parseInt(mainPin.style.left, 10) - pinSize.WIDTH / 2,
-      y: parseInt(mainPin.style.top, 10) + pinSize.POINTY_END_HEIGHT
-    };
-  };
-
   var buttonPinClickHandler = function (evt) {
     var ENTER_KEYCODE = 13;
     pinClickHandler();
-    setAddress(getAddress());
+    window.form.setActiveAddress();
 
     if (evt.keyCode === ENTER_KEYCODE) {
       pinClickHandler();
@@ -59,7 +40,17 @@
   mainPin.addEventListener('keydown', buttonPinClickHandler);
 
   window.map = {
-    setAddress: setAddress,
-    getDefaultAddress: getDefaultAddress
+    calculateDefualtAddress: function () {
+      return {
+        x: parseInt(mainPin.style.left, 10) - pinSize.WIDTH / 2,
+        y: parseInt(mainPin.style.top, 10) - pinSize.HEIGHT / 2
+      };
+    },
+    calculateCurrentAddress: function () {
+      return {
+        x: parseInt(mainPin.style.left, 10) - pinSize.WIDTH / 2,
+        y: parseInt(mainPin.style.top, 10) + pinSize.POINTY_END_HEIGHT
+      };
+    }
   };
 })();

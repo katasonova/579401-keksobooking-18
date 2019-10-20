@@ -6,6 +6,19 @@
   var formCheckOutSelector = document.querySelector('#timeout');
   var filtersForm = document.querySelector('.map__filters');
 
+  var getDefaultAddress = function () {
+    return window.map.calculateDefualtAddress();
+  };
+
+  var setAddress = function (coords) {
+    var addressInput = document.querySelector('#address');
+    addressInput.value = coords.x + ', ' + coords.y;
+  };
+
+  var getAddress = function () {
+    return window.map.calculateCurrentAddress();
+  };
+
   var disableFormElements = function () {
     var allFieldsets = document.querySelectorAll('.ad-form__element');
 
@@ -86,10 +99,13 @@
   formCheckOutSelector.addEventListener('change', checkOutSelectChangeHandler);
 
   disableFormElements();
-  window.map.setAddress(window.map.getDefaultAddress());
+  setAddress(getDefaultAddress());
 
   window.form = {
     setAvailability: setAvailability,
+    setActiveAddress: function () {
+      setAddress(getAddress());
+    },
     enable: function () {
       filtersForm.classList.remove('ad-form--disabled');
     }
