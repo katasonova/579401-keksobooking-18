@@ -10,8 +10,6 @@
     PHOTO: ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg'],
   };
 
-  var LENGTH_OF_GENERATED_ARRAY = 8;
-  var PIN_WIDTH = 40;
   var Y_LOCATION = {
     MIN: 130,
     MAX: 630
@@ -22,6 +20,9 @@
     MAX_ROOMS: 15,
     MAX_GUESTS: 10
   };
+
+  var LENGTH_OF_GENERATED_ARRAY = 8;
+  var PIN_WIDTH = 40;
 
   var mapsWidth = document.querySelector('.map').offsetWidth;
 
