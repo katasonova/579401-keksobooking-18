@@ -4,20 +4,20 @@
   var pinSize = {
     WIDTH: 65,
     HEIGHT: 65,
-    POINTY_END_HEIGHT: 22
+    POINTY_END_HEIGHT: 16
   };
 
   var searchArea = {
     Y: {
       RANGE: {
-        MIN: 130,
-        MAX: 630
+        MIN: 130 - pinSize.POINTY_END_HEIGHT - pinSize.HEIGHT,
+        MAX: 630 - pinSize.POINTY_END_HEIGHT - pinSize.HEIGHT
       }
     },
     X: {
       RANGE: {
-        MIN: 0,
-        MAX: document.body.offsetWidth - pinSize.WIDTH,
+        MIN: 0 - pinSize.WIDTH / 2,
+        MAX: 1200 - pinSize.WIDTH / 2,
       }
     }
   };
@@ -58,6 +58,8 @@
     };
 
     var buttonPinMouseMoveHandler = function (moveEvt) {
+      window.form.setActiveAddress();
+
       var shift = {
         x: startCoords.x - moveEvt.clientX,
         y: startCoords.y - moveEvt.clientY
@@ -68,8 +70,8 @@
         y: moveEvt.clientY
       };
 
-      mainPin.style.top = Math.max(searchArea.Y.RANGE.MIN, Math.min(mainPin.offsetTop - shift.y, searchArea.Y.RANGE.MAX)) + 'px';
-      mainPin.style.left = Math.max(searchArea.X.RANGE.MIN, Math.min(mainPin.offsetLeft - shift.x, searchArea.X.RANGE.MAX)) + 'px';
+      mainPin.style.top = Math.round(Math.max(searchArea.Y.RANGE.MIN, Math.min(mainPin.offsetTop - shift.y, searchArea.Y.RANGE.MAX))) + 'px';
+      mainPin.style.left = Math.round(Math.max(searchArea.X.RANGE.MIN, Math.min(mainPin.offsetLeft - shift.x, searchArea.X.RANGE.MAX))) + 'px';
     };
 
     var buttonPinMouseUpHandler = function () {
@@ -97,8 +99,8 @@
     },
     calculateCurrentAddress: function () {
       return {
-        x: parseInt(mainPin.style.left, 10),
-        y: parseInt(mainPin.style.top, 10)
+        x: parseInt(mainPin.style.left, 10) + Math.floor(pinSize.WIDTH / 2),
+        y: parseInt(mainPin.style.top, 10) + pinSize.POINTY_END_HEIGHT + pinSize.HEIGHT
       };
     }
   };
