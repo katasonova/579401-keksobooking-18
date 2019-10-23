@@ -1,7 +1,21 @@
 'use strict';
 
 (function () {
+  var imgParams = {
+    WIDTH: 45,
+    HEIGHT: 45,
+    ALT: 'Фотография жилья'
+  };
+
+  var typePropertyParams = {
+    'palace': 'Дворец',
+    'flat': 'Квартира',
+    'house': 'Дом',
+    'bungalo': 'Бунгало'
+  };
+
   var map = document.querySelector('.map');
+  var cardTemplate = document.querySelector('#card').content.querySelector('.map__card');
   var currentCard;
 
   var removeCard = function () {
@@ -40,21 +54,6 @@
 
     return cardElement;
   };
-
-  var typePropertyParams = {
-    'palace': 'Дворец',
-    'flat': 'Квартира',
-    'house': 'Дом',
-    'bungalo': 'Бунгало'
-  };
-
-  var imgParams = {
-    WIDTH: 45,
-    HEIGHT: 45,
-    ALT: 'Фотография жилья'
-  };
-
-  var cardTemplate = document.querySelector('#card').content.querySelector('.map__card');
 
   var clearElementsList = function (element, elementSelector) {
     var listToClean = element.querySelector(elementSelector);
@@ -100,9 +99,8 @@
     return imgList;
   };
 
-
   window.card = {
-    renderCard: function (advertElement) {
+    render: function (advertElement) {
       removeCard();
 
       currentCard = generateCard(advertElement);
