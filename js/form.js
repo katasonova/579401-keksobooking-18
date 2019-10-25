@@ -17,6 +17,8 @@
   var formPriceInput = document.querySelector('#price');
   var formPropertyTypeSelector = document.querySelector('#type');
   var form = document.querySelector('.ad-form');
+  var successTemplate = document.querySelector('#success').content.querySelector('.success');
+  var errorTemplate = document.querySelector('#error').content.querySelector('.error');
 
   formAddressInput.readOnly = true;
   formTitleInput.required = true;
@@ -97,11 +99,19 @@
   setAddress(getDefaultAddress());
 
   var successHandler = function () {
-    dialogWindow.classList.add('hidden');
+    var successElement = successTemplate.cloneNode(true);
+
+    document.body.insertAdjacentElement('afterbegin', successElement);
+  };
+
+  var errorHandler = function () {
+    var errorElement = errorTemplate.cloneNode(true);
+
+    document.body.insertAdjacentElement('afterbegin', errorElement);
   };
 
   form.addEventListener('submit', function (evt) {
-    window.backend.save(new FormData(form), successHandler, window.data.errorHandler);
+    window.backend.save(new FormData(form), successHandler, errorHandler);
     evt.preventDefault();
   });
 

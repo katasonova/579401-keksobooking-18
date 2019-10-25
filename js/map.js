@@ -9,12 +9,12 @@
 
   var searchArea = {
     Y: {
-        MIN: 130 - pinSize.POINTY_END_HEIGHT - pinSize.HEIGHT,
-        MAX: 630 - pinSize.POINTY_END_HEIGHT - pinSize.HEIGHT
+      MIN: 130 - pinSize.POINTY_END_HEIGHT - pinSize.HEIGHT,
+      MAX: 630 - pinSize.POINTY_END_HEIGHT - pinSize.HEIGHT
     },
     X: {
-        MIN: 0 - pinSize.WIDTH / 2,
-        MAX: 1200 - pinSize.WIDTH / 2,
+      MIN: 0 - pinSize.WIDTH / 2,
+      MAX: 1200 - pinSize.WIDTH / 2,
     }
   };
 
@@ -26,8 +26,9 @@
     receivedArray = response;
   };
 
-  var errorHandler = function (errorMessage) {
+  var errorHandler = function () {
     var errorElement = errorTemplate.cloneNode(true);
+    errorElement.querySelector('p').innerHTML = 'Не получилось загрузить данные с сервера';
 
     document.body.insertAdjacentElement('afterbegin', errorElement);
   };
@@ -101,6 +102,7 @@
   mainPin.addEventListener('keydown', buttonPinKeyDownHandler);
 
   window.map = {
+    errorHandler: errorHandler,
     calculateDefualtAddress: function () {
       return {
         x: parseInt(mainPin.style.left, 10) - pinSize.WIDTH / 2,
