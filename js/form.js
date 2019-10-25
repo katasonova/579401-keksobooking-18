@@ -16,6 +16,7 @@
   var formTitleInput = document.querySelector('#title');
   var formPriceInput = document.querySelector('#price');
   var formPropertyTypeSelector = document.querySelector('#type');
+  var form = document.querySelector('.ad-form');
 
   formAddressInput.readOnly = true;
   formTitleInput.required = true;
@@ -94,6 +95,15 @@
   formCheckOutSelector.addEventListener('change', checkOutSelectChangeHandler);
   disableFormElements();
   setAddress(getDefaultAddress());
+
+  var successHandler = function () {
+    dialogWindow.classList.add('hidden');
+  };
+
+  form.addEventListener('submit', function (evt) {
+    window.backend.save(new FormData(form), successHandler, window.data.errorHandler);
+    evt.preventDefault();
+  });
 
   window.form = {
     setAvailability: setAvailability,

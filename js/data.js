@@ -25,6 +25,7 @@
   var PIN_WIDTH = 40;
 
   var mapsWidth = document.querySelector('.map').offsetWidth;
+  var errorTemplate = document.querySelector('#error').content.querySelector('.error');
 
   var getRandomIndexOutOfArray = function (array) {
     return Math.round(Math.random() * (array.length - 1));
@@ -91,6 +92,18 @@
     };
   };
 
+    var successHandler = function (wizards) {
+      //show server data somehow
+    };
+
+    var errorHandler = function (errorMessage) {
+      var errorElement = errorTemplate.cloneNode(true);
+
+      document.body.insertAdjacentElement('afterbegin', errorElement);
+    };
+
+  window.backend.load(successHandler, errorHandler);
+
   window.data = {
     generateAdvertsList: function () {
       var generatedAdverts = [];
@@ -100,6 +113,6 @@
       }
 
       return generatedAdverts;
-    }
+    },
   };
 })();
