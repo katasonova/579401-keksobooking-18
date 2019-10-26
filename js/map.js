@@ -24,6 +24,9 @@
 
   var successHandler = function (response) {
     receivedArray = response;
+
+    mainPin.addEventListener('mousedown', buttonPinClickHandler);
+    mainPin.addEventListener('keydown', buttonPinKeyDownHandler);
   };
 
   var errorHandler = function () {
@@ -98,11 +101,7 @@
 
   window.backend.load(successHandler, errorHandler);
 
-  mainPin.addEventListener('mousedown', buttonPinClickHandler);
-  mainPin.addEventListener('keydown', buttonPinKeyDownHandler);
-
   window.map = {
-    errorHandler: errorHandler,
     calculateDefualtAddress: function () {
       return {
         x: parseInt(mainPin.style.left, 10) - pinSize.WIDTH / 2,
