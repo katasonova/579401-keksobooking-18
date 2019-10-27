@@ -9,24 +9,36 @@
 
   var searchArea = {
     Y: {
-      RANGE: {
-        MIN: 130 - pinSize.POINTY_END_HEIGHT - pinSize.HEIGHT,
-        MAX: 630 - pinSize.POINTY_END_HEIGHT - pinSize.HEIGHT
-      }
+      MIN: 130 - pinSize.POINTY_END_HEIGHT - pinSize.HEIGHT,
+      MAX: 630 - pinSize.POINTY_END_HEIGHT - pinSize.HEIGHT
     },
     X: {
-      RANGE: {
-        MIN: 0 - pinSize.WIDTH / 2,
-        MAX: 1200 - pinSize.WIDTH / 2,
-      }
+      MIN: 0 - pinSize.WIDTH / 2,
+      MAX: 1200 - pinSize.WIDTH / 2,
     }
   };
 
+  var receivedArray = [];
   var mainPin = document.querySelector('.map__pin--main');
+  var errorTemplate = document.querySelector('#error').content.querySelector('.error');
+
+  var successHandler = function (response) {
+    receivedArray = response;
+
+    mainPin.addEventListener('mousedown', buttonPinClickHandler);
+    mainPin.addEventListener('keydown', buttonPinKeyDownHandler);
+  };
+
+  var errorHandler = function () {
+    var errorElement = errorTemplate.cloneNode(true);
+    errorElement.querySelector('p').innerHTML = 'Не получилось загрузить данные с сервера';
+
+    document.body.insertAdjacentElement('afterbegin', errorElement);
+  };
 
   var pinClickHandler = function () {
     if (document.querySelector('.map').classList.contains('map--faded')) {
-      window.pin.renderPinsList(window.data.generateAdvertsList());
+      window.pin.renderPinsList(receivedArray);
     }
 
     document.querySelector('.map').classList.remove('map--faded');
@@ -70,8 +82,8 @@
         y: moveEvt.clientY
       };
 
-      mainPin.style.top = Math.round(Math.max(searchArea.Y.RANGE.MIN, Math.min(mainPin.offsetTop - shift.y, searchArea.Y.RANGE.MAX))) + 'px';
-      mainPin.style.left = Math.round(Math.max(searchArea.X.RANGE.MIN, Math.min(mainPin.offsetLeft - shift.x, searchArea.X.RANGE.MAX))) + 'px';
+      mainPin.style.top = Math.round(Math.max(searchArea.Y.MIN, Math.min(mainPin.offsetTop - shift.y, searchArea.Y.MAX))) + 'px';
+      mainPin.style.left = Math.round(Math.max(searchArea.X.MIN, Math.min(mainPin.offsetLeft - shift.x, searchArea.X.MAX))) + 'px';
     };
 
     var buttonPinMouseUpHandler = function () {
@@ -87,8 +99,7 @@
     document.addEventListener('mouseup', buttonPinMouseUpHandler);
   };
 
-  mainPin.addEventListener('mousedown', buttonPinClickHandler);
-  mainPin.addEventListener('keydown', buttonPinKeyDownHandler);
+  window.backend.load(successHandler, errorHandler);
 
   window.map = {
     calculateDefualtAddress: function () {
