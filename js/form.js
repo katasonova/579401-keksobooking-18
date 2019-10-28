@@ -98,14 +98,49 @@
   disableFormElements();
   setAddress(getDefaultAddress());
 
+  var revertPageState = function () {
+    window.card.remove();
+  }
+
   var successHandler = function () {
+    revertPageState();
+
     var successElement = successTemplate.cloneNode(true);
 
+    successElement.addEventListener('click', function () {
+      successElement.remove();
+    });
+
+    if (successElement) {
+      document.addEventListener('keydown', function (evt) {
+        var ESC_KEYCODE = 27;
+        if (evt.keyCode === ESC_KEYCODE) {
+          successElement.remove();
+        }
+      })
+    }
     document.body.insertAdjacentElement('afterbegin', successElement);
   };
 
   var errorHandler = function () {
     var errorElement = errorTemplate.cloneNode(true);
+
+    errorElement.addEventListener('click', function () {
+      errorElement.remove();
+    });
+
+    errorElement.querySelector('.error__button').addEventListener('click', function () {
+      errorElement.remove();
+    });
+
+    if (errorElement) {
+      document.addEventListener('keydown', function (evt) {
+        var ESC_KEYCODE = 27;
+        if (evt.keyCode === ESC_KEYCODE) {
+          errorElement.remove();
+        }
+      })
+    }
 
     document.body.insertAdjacentElement('afterbegin', errorElement);
   };
