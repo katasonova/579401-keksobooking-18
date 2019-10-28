@@ -34,6 +34,14 @@
       });
 
       pinsList.appendChild(fragment);
+    },
+    remove: function () {
+      var pins = document.querySelectorAll('.map__pin');
+      pins.forEach(function(pin) {
+        if (!(pin.className.includes('map__pin--main'))) {
+          pin.remove();
+        }
+      });
     }
   };
 })();
