@@ -22,6 +22,16 @@
   var mainPin = document.querySelector('.map__pin--main');
   var errorTemplate = document.querySelector('#error').content.querySelector('.error');
 
+  var defaultCoords = {
+    X: parseInt(mainPin.style.left, 10),
+    Y: parseInt(mainPin.style.top, 10)
+  }
+
+  var movePinToDefaultPosition = function () {
+    mainPin.style.top = defaultCoords.X + 'px';
+    mainPin.style.left = defaultCoords.Y + 'px';
+  };
+
   var successHandler = function (response) {
     receivedArray = response;
 
@@ -104,8 +114,8 @@
   window.map = {
     calculateDefualtAddress: function () {
       return {
-        x: parseInt(mainPin.style.left, 10) - pinSize.WIDTH / 2,
-        y: parseInt(mainPin.style.top, 10) - pinSize.HEIGHT / 2
+        x: defaultCoords.X - pinSize.WIDTH / 2,
+        y: defaultCoords.Y  - pinSize.HEIGHT / 2
       };
     },
     calculateCurrentAddress: function () {
@@ -113,6 +123,7 @@
         x: parseInt(mainPin.style.left, 10) + Math.floor(pinSize.WIDTH / 2),
         y: parseInt(mainPin.style.top, 10) + pinSize.POINTY_END_HEIGHT + pinSize.HEIGHT
       };
-    }
+    },
+    movePinToDefaultPosition: movePinToDefaultPosition
   };
 })();

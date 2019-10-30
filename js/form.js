@@ -19,7 +19,6 @@
   var form = document.querySelector('.ad-form');
   var successTemplate = document.querySelector('#success').content.querySelector('.success');
   var errorTemplate = document.querySelector('#error').content.querySelector('.error');
-  var defaultAddress;
 
   formAddressInput.readOnly = true;
   formTitleInput.required = true;
@@ -97,18 +96,14 @@
   formCheckInSelector.addEventListener('change', checkInSelectChangeHandler);
   formCheckOutSelector.addEventListener('change', checkOutSelectChangeHandler);
   disableFormElements();
-  defaultAddress = setAddress(getDefaultAddress());
+  setAddress(getDefaultAddress());
 
   var revertPageState = function () {
     window.card.remove();
     window.pin.remove();
-
-    var formElements = form.querySelectorAll('input');
-    formElements.forEach(function (input) {
-      input.value = '';
-    })
-
-    formAddressInput.value = defaultAddress;
+    form.reset();
+    setAddress(getDefaultAddress());
+    window.map.movePinToDefaultPosition();
   }
 
   var successHandler = function () {
