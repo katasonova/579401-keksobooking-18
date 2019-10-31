@@ -21,15 +21,16 @@
   var receivedArray = [];
   var mainPin = document.querySelector('.map__pin--main');
   var errorTemplate = document.querySelector('#error').content.querySelector('.error');
+  var filters = document.querySelector('.map__filters');
 
-  var defaultCoords = {
-    X: parseInt(mainPin.style.left, 10),
-    Y: parseInt(mainPin.style.top, 10)
-  }
+  var disableMap = function () {
+    filters.classList.add('ad-form--disabled');
+    document.querySelector('.map').classList.add('map--faded');
+  };
 
-  var movePinToDefaultPosition = function () {
-    mainPin.style.top = defaultCoords.X + 'px';
-    mainPin.style.left = defaultCoords.Y + 'px';
+  var movePinToDefaultPosition = function (xPosition, yPosition) {
+    mainPin.style.top = yPosition + pinSize.HEIGHT / 2 + 'px';
+    mainPin.style.left = xPosition + pinSize.WIDTH / 2 + 'px';
   };
 
   var successHandler = function (response) {
@@ -114,8 +115,8 @@
   window.map = {
     calculateDefualtAddress: function () {
       return {
-        x: defaultCoords.X - pinSize.WIDTH / 2,
-        y: defaultCoords.Y  - pinSize.HEIGHT / 2
+        x: parseInt(mainPin.style.left, 10) - pinSize.WIDTH / 2,
+        y: parseInt(mainPin.style.top, 10) - pinSize.HEIGHT / 2
       };
     },
     calculateCurrentAddress: function () {
@@ -124,6 +125,7 @@
         y: parseInt(mainPin.style.top, 10) + pinSize.POINTY_END_HEIGHT + pinSize.HEIGHT
       };
     },
-    movePinToDefaultPosition: movePinToDefaultPosition
+    movePinToDefaultPosition: movePinToDefaultPosition,
+    disableMap: disableMap
   };
 })();
