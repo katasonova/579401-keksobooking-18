@@ -19,6 +19,7 @@
   var form = document.querySelector('.ad-form');
   var successTemplate = document.querySelector('#success').content.querySelector('.success');
   var errorTemplate = document.querySelector('#error').content.querySelector('.error');
+  var defaultAddress;
 
   formAddressInput.readOnly = true;
   formTitleInput.required = true;
@@ -26,7 +27,8 @@
   formPriceInput.placeholder = '1000';
 
   var getDefaultAddress = function () {
-    return window.map.calculateDefualtAddress();
+    defaultAddress = window.map.calculateDefualtAddress();
+    return defaultAddress;
   };
 
   var setAddress = function (coords) {
@@ -98,14 +100,55 @@
   disableFormElements();
   setAddress(getDefaultAddress());
 
+  var revertPageState = function () {
+    form.classList.add('ad-form--disabled');
+    form.reset();
+    window.card.remove();
+    window.pin.remove();
+    window.map.disableMap();
+    setAddress(defaultAddress);
+    window.map.movePinToDefaultPosition(defaultAddress.x, defaultAddress.y);
+  };
+
   var successHandler = function () {
     var successElement = successTemplate.cloneNode(true);
 
+    successElement.addEventListener('click', function () {
+      successElement.remove();
+    });
+
+    if (successElement) {
+      document.addEventListener('keydown', function (evt) {
+        var ESC_KEYCODE = 27;
+        if (evt.keyCode === ESC_KEYCODE) {
+          successElement.remove();
+        }
+      });
+    }
     document.body.insertAdjacentElement('afterbegin', successElement);
+
+    revertPageState();
   };
 
   var errorHandler = function () {
     var errorElement = errorTemplate.cloneNode(true);
+
+    errorElement.addEventListener('click', function () {
+      errorElement.remove();
+    });
+
+    errorElement.querySelector('.error__button').addEventListener('click', function () {
+      errorElement.remove();
+    });
+
+    if (errorElement) {
+      document.addEventListener('keydown', function (evt) {
+        var ESC_KEYCODE = 27;
+        if (evt.keyCode === ESC_KEYCODE) {
+          errorElement.remove();
+        }
+      });
+    }
 
     document.body.insertAdjacentElement('afterbegin', errorElement);
   };

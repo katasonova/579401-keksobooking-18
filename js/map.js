@@ -21,6 +21,17 @@
   var receivedArray = [];
   var mainPin = document.querySelector('.map__pin--main');
   var errorTemplate = document.querySelector('#error').content.querySelector('.error');
+  var filters = document.querySelector('.map__filters');
+
+  var disableMap = function () {
+    filters.classList.add('ad-form--disabled');
+    document.querySelector('.map').classList.add('map--faded');
+  };
+
+  var movePinToDefaultPosition = function (xPosition, yPosition) {
+    mainPin.style.top = yPosition + pinSize.HEIGHT / 2 + 'px';
+    mainPin.style.left = xPosition + pinSize.WIDTH / 2 + 'px';
+  };
 
   var successHandler = function (response) {
     receivedArray = response;
@@ -113,6 +124,8 @@
         x: parseInt(mainPin.style.left, 10) + Math.floor(pinSize.WIDTH / 2),
         y: parseInt(mainPin.style.top, 10) + pinSize.POINTY_END_HEIGHT + pinSize.HEIGHT
       };
-    }
+    },
+    movePinToDefaultPosition: movePinToDefaultPosition,
+    disableMap: disableMap
   };
 })();

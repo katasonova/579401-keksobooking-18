@@ -105,6 +105,7 @@
 
       currentCard = generateCard(advertElement);
       map.insertBefore(currentCard, document.querySelector('.map__filters-container'));
-    }
+    },
+    remove: removeCard
   };
 })();
