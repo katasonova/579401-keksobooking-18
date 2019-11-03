@@ -22,6 +22,25 @@
   var mainPin = document.querySelector('.map__pin--main');
   var errorTemplate = document.querySelector('#error').content.querySelector('.error');
   var filters = document.querySelector('.map__filters');
+  var housing = document.querySelector('#housing-type');
+  var selectedHousing;
+
+  var updatePinsList = function () {
+    var properHousings = receivedArray.filter(function (element) {
+      return element.offer.type === selectedHousing;
+    });
+
+    if (selectedHousing === 'any') {
+      properHousings = receivedArray;
+    }
+
+    window.pin.renderPinsList(properHousings);
+  };
+
+  housing.addEventListener('change', function () {
+    selectedHousing = housing.value;
+    updatePinsList();
+  });
 
   var disableMap = function () {
     filters.classList.add('ad-form--disabled');
