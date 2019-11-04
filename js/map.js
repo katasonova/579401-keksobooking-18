@@ -18,28 +18,40 @@
     }
   };
 
+  var MAX_AMOUNT_RENDERED_PINS = 5;
+
   var receivedArray = [];
+  var pinsList = document.querySelector('.map__pins');
   var mainPin = document.querySelector('.map__pin--main');
   var errorTemplate = document.querySelector('#error').content.querySelector('.error');
   var filters = document.querySelector('.map__filters');
   var housing = document.querySelector('#housing-type');
   var selectedHousing;
 
-  var updatePinsList = function () {
-    var properHousings = receivedArray.filter(function (element) {
-      return element.offer.type === selectedHousing;
+  var removePins = function () {
+    var pins = document.querySelectorAll('.map__pin');
+    pins.forEach(function (pin) {
+      if (!(pin.className.includes('map__pin--main'))) {
+        pin.remove();
+      }
     });
+  };
 
-    if (selectedHousing === 'any') {
-      properHousings = receivedArray;
+  var renderPinsList = function (pinsGeneratedData) {
+    var fragment = document.createDocumentFragment();
+    removePins();
+    var renderedNumber = pinsGeneratedData.length > MAX_AMOUNT_RENDERED_PINS ? MAX_AMOUNT_RENDERED_PINS : pinsGeneratedData.length;
+
+    for (var i = 0; i < renderedNumber; i++) {
+      fragment.appendChild(window.pin.renderMapPin(pinsGeneratedData[i]));
     }
 
-    window.pin.renderPinsList(properHousings);
+    pinsList.appendChild(fragment);
   };
 
   housing.addEventListener('change', function () {
     selectedHousing = housing.value;
-    updatePinsList();
+    window.filter.updatePinsList(receivedArray, selectedHousing);
   });
 
   var disableMap = function () {
@@ -68,7 +80,7 @@
 
   var pinClickHandler = function () {
     if (document.querySelector('.map').classList.contains('map--faded')) {
-      window.pin.renderPinsList(receivedArray);
+      renderPinsList(receivedArray);
     }
 
     document.querySelector('.map').classList.remove('map--faded');
@@ -145,6 +157,7 @@
       };
     },
     movePinToDefaultPosition: movePinToDefaultPosition,
-    disableMap: disableMap
+    disableMap: disableMap,
+    renderPinsList: renderPinsList
   };
 })();
