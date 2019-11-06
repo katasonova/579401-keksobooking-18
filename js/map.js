@@ -25,8 +25,6 @@
   var mainPin = document.querySelector('.map__pin--main');
   var errorTemplate = document.querySelector('#error').content.querySelector('.error');
   var filters = document.querySelector('.map__filters');
-  var housing = document.querySelector('#housing-type');
-  var selectedHousing;
 
   var removePins = function () {
     var pins = document.querySelectorAll('.map__pin');
@@ -37,22 +35,18 @@
     });
   };
 
-  var renderPinsList = function (pinsGeneratedData) {
+  var renderPinsList = function () {
+    var pinsGeneratedData = window.filters.updatePinsList(receivedArray);
     var fragment = document.createDocumentFragment();
     removePins();
     var renderedNumber = pinsGeneratedData.length > MAX_AMOUNT_RENDERED_PINS ? MAX_AMOUNT_RENDERED_PINS : pinsGeneratedData.length;
 
     for (var i = 0; i < renderedNumber; i++) {
-      fragment.appendChild(window.pin.renderMapPin(pinsGeneratedData[i]));
+      fragment.appendChild(window.pin.render(pinsGeneratedData[i]));
     }
 
     pinsList.appendChild(fragment);
   };
-
-  housing.addEventListener('change', function () {
-    selectedHousing = housing.value;
-    window.filter.updatePinsList(receivedArray, selectedHousing);
-  });
 
   var disableMap = function () {
     filters.classList.add('ad-form--disabled');
@@ -80,7 +74,7 @@
 
   var pinClickHandler = function () {
     if (document.querySelector('.map').classList.contains('map--faded')) {
-      renderPinsList(receivedArray);
+      renderPinsList();
     }
 
     document.querySelector('.map').classList.remove('map--faded');

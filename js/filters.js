@@ -1,7 +1,10 @@
 'use strict';
 
 (function () {
-  var updatePinsList = function (array, selectedHousing) {
+  var housing = document.querySelector('#housing-type');
+  var selectedHousing = housing.value;
+
+  var updatePinsList = function (array) {
     var properHousings = array.filter(function (element) {
       return element.offer.type === selectedHousing;
     });
@@ -10,10 +13,15 @@
       properHousings = array;
     }
 
-    window.map.renderPinsList(properHousings);
+    return properHousings;
   };
 
-  window.filter = {
+  housing.addEventListener('change', function () {
+    selectedHousing = housing.value;
+    window.map.renderPinsList();
+  });
+
+  window.filters = {
     updatePinsList: updatePinsList
   };
 })();

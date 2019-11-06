@@ -25,6 +25,6 @@
   };
 
   window.pin = {
-    renderMapPin: renderMapPin
+    render: renderMapPin
   };
 })();
