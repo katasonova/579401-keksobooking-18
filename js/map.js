@@ -18,10 +18,35 @@
     }
   };
 
+  var MAX_AMOUNT_RENDERED_PINS = 5;
+
   var receivedArray = [];
+  var pinsList = document.querySelector('.map__pins');
   var mainPin = document.querySelector('.map__pin--main');
   var errorTemplate = document.querySelector('#error').content.querySelector('.error');
   var filters = document.querySelector('.map__filters');
+
+  var removePins = function () {
+    var pins = document.querySelectorAll('.map__pin');
+    pins.forEach(function (pin) {
+      if (!(pin.className.includes('map__pin--main'))) {
+        pin.remove();
+      }
+    });
+  };
+
+  var renderPinsList = function () {
+    var pinsGeneratedData = window.filters.updatePinsList(receivedArray);
+    var fragment = document.createDocumentFragment();
+    removePins();
+    var renderedNumber = pinsGeneratedData.length > MAX_AMOUNT_RENDERED_PINS ? MAX_AMOUNT_RENDERED_PINS : pinsGeneratedData.length;
+
+    for (var i = 0; i < renderedNumber; i++) {
+      fragment.appendChild(window.pin.render(pinsGeneratedData[i]));
+    }
+
+    pinsList.appendChild(fragment);
+  };
 
   var disableMap = function () {
     filters.classList.add('ad-form--disabled');
@@ -49,7 +74,7 @@
 
   var pinClickHandler = function () {
     if (document.querySelector('.map').classList.contains('map--faded')) {
-      window.pin.renderPinsList(receivedArray);
+      renderPinsList();
     }
 
     document.querySelector('.map').classList.remove('map--faded');
@@ -126,6 +151,7 @@
       };
     },
     movePinToDefaultPosition: movePinToDefaultPosition,
-    disableMap: disableMap
+    disableMap: disableMap,
+    renderPinsList: renderPinsList
   };
 })();
