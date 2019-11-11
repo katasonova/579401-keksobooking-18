@@ -36,7 +36,6 @@
   };
 
   var renderPinsList = function () {
-    window.debounce.enable();
     var pinsGeneratedData = window.filters.updatePinsList(receivedArray);
     var fragment = document.createDocumentFragment();
     removePins();
