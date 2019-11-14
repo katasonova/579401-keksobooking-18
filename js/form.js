@@ -21,6 +21,7 @@
   var errorTemplate = document.querySelector('#error').content.querySelector('.error');
   var defaultAddress;
 
+  form.querySelector('#avatar').disabled = true;
   formAddressInput.readOnly = true;
   formTitleInput.required = true;
   formPriceInput.required = true;
@@ -102,10 +103,14 @@
 
   var revertPageState = function () {
     form.classList.add('ad-form--disabled');
+    form.querySelector('#avatar').disabled = true;
     form.reset();
+    disableFormElements();
     window.card.remove();
-    window.pin.remove();
-    window.map.disableMap();
+    window.map.disable();
+    window.map.removePins();
+    window.filters.disable();
+    window.photo.remove();
     setAddress(defaultAddress);
     window.map.movePinToDefaultPosition(defaultAddress.x, defaultAddress.y);
   };
@@ -156,6 +161,10 @@
   form.addEventListener('submit', function (evt) {
     window.backend.save(new FormData(form), successHandler, errorHandler);
     evt.preventDefault();
+  });
+
+  form.querySelector('.ad-form__reset').addEventListener('click', function () {
+    revertPageState();
   });
 
   window.form = {
