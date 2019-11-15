@@ -158,12 +158,10 @@
     document.body.insertAdjacentElement('afterbegin', errorElement);
   };
 
-  var invalidInputHandler = function (element) {
-    return function () {
-      if (element.value === '') {
-        element.style.border = '2px solid red';
+  var invalidInputHandler = function (evt) {
+      if (evt.target.value === '') {
+        evt.target.style.border = '2px dotted red';
       }
-    };
   };
 
   form.addEventListener('submit', function (evt) {
@@ -175,8 +173,8 @@
     revertPageState();
   });
 
-  formTitleInput.addEventListener('invalid', invalidInputHandler(formTitleInput));
-  formPriceInput.addEventListener('invalid', invalidInputHandler(formPriceInput));
+  formTitleInput.addEventListener('invalid', invalidInputHandler);
+  formPriceInput.addEventListener('invalid', invalidInputHandler);
 
   window.form = {
     setAvailability: setAvailability,
