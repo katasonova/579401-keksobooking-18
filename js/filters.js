@@ -42,11 +42,11 @@
 
     var properPrice = array.filter(function (element) {
       if (element.offer.price >= 10000 && element.offer.price <= 50000) {
-        selectedPriceRange = 'low';
-      } else if (element.offer.price < 10000) {
-        selectedPriceRange = 'high';
-      } else if (element.offer.price > 50000) {
         selectedPriceRange = 'middle';
+      } else if (element.offer.price < 10000) {
+        selectedPriceRange = 'low';
+      } else if (element.offer.price > 50000) {
+        selectedPriceRange = 'high';
       }
 
       return selectedPriceRange === selectedPrice;
@@ -101,10 +101,6 @@
     return filteredData;
   };
 
-  var updatePinsList = function (array) {
-    return filter(array);
-  };
-
   filtersForm.addEventListener('change', window.debounce(function () {
     window.card.remove();
     selectedHousing = housing.value;
@@ -117,7 +113,7 @@
   disableFilters();
 
   window.filters = {
-    updatePinsList: updatePinsList,
+    updatePinsList: filter,
     disable: disableFilters,
     enable: function () {
       filters.classList.remove('ad-form--disabled');
