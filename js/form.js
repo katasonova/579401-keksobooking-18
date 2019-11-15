@@ -159,9 +159,9 @@
   };
 
   var invalidInputHandler = function (evt) {
-      if (evt.target.value === '') {
-        evt.target.style.border = '2px dotted red';
-      }
+    if (evt.target.value === '') {
+      evt.target.style.border = '2px dotted red';
+    }
   };
 
   form.addEventListener('submit', function (evt) {
