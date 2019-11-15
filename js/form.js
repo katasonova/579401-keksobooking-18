@@ -158,6 +158,14 @@
     document.body.insertAdjacentElement('afterbegin', errorElement);
   };
 
+  var invalidInputHandler = function (element) {
+    return function () {
+      if (element.value === '') {
+        element.style.border = '2px solid red';
+      }
+    };
+  };
+
   form.addEventListener('submit', function (evt) {
     window.backend.save(new FormData(form), successHandler, errorHandler);
     evt.preventDefault();
@@ -166,6 +174,9 @@
   form.querySelector('.ad-form__reset').addEventListener('click', function () {
     revertPageState();
   });
+
+  formTitleInput.addEventListener('invalid', invalidInputHandler(formTitleInput));
+  formPriceInput.addEventListener('invalid', invalidInputHandler(formPriceInput));
 
   window.form = {
     setAvailability: setAvailability,
