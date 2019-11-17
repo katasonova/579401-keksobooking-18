@@ -170,9 +170,7 @@
   };
 
   var revertInvalidInputState = function (input) {
-    if (input.style.border === '2px dotted red') {
       input.style.border = 'none';
-    }
   };
 
   form.addEventListener('submit', function (evt) {
@@ -184,6 +182,8 @@
 
   form.querySelector('.ad-form__reset').addEventListener('click', function () {
     revertPageState();
+    revertInvalidInputState(formTitleInput);
+    revertInvalidInputState(formPriceInput);
   });
 
   formTitleInput.addEventListener('invalid', invalidInputHandler);
