@@ -139,8 +139,8 @@
   window.map = {
     calculateDefualtAddress: function () {
       return {
-        x: parseInt(mainPin.style.left, 10) - pinSize.WIDTH / 2,
-        y: parseInt(mainPin.style.top, 10) - pinSize.HEIGHT / 2
+        x: Math.round(parseInt(mainPin.style.left, 10) - pinSize.WIDTH / 2),
+        y: Math.round(parseInt(mainPin.style.top, 10) - pinSize.HEIGHT / 2)
       };
     },
     calculateCurrentAddress: function () {
