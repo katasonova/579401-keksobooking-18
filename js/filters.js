@@ -1,6 +1,7 @@
 'use strict';
 
 (function () {
+  var filters = document.querySelector('.map__filters');
   var filtersForm = document.querySelector('.map__filters');
   var housing = filtersForm.querySelector('#housing-type');
   var price = filtersForm.querySelector('#housing-price');
@@ -12,6 +13,15 @@
   var selectedRooms = rooms.value;
   var selectedGuests = guests.value;
   var selectedPriceRange;
+
+  var disableFilters = function () {
+    filters.classList.add('ad-form--disabled');
+    filters.querySelector('.map__features').disabled = true;
+    var allSelectors = document.querySelectorAll('.map__filter');
+    allSelectors.forEach(function (element) {
+      element.disabled = true;
+    });
+  };
 
   var filterHousing = function (array) {
     if (selectedHousing === 'any') {
@@ -32,11 +42,11 @@
 
     var properPrice = array.filter(function (element) {
       if (element.offer.price >= 10000 && element.offer.price <= 50000) {
-        selectedPriceRange = 'low';
-      } else if (element.offer.price < 10000) {
-        selectedPriceRange = 'high';
-      } else if (element.offer.price > 50000) {
         selectedPriceRange = 'middle';
+      } else if (element.offer.price < 10000) {
+        selectedPriceRange = 'low';
+      } else if (element.offer.price > 50000) {
+        selectedPriceRange = 'high';
       }
 
       return selectedPriceRange === selectedPrice;
@@ -91,19 +101,36 @@
     return filteredData;
   };
 
-  var updatePinsList = function (array) {
-    return filter(array);
-  };
-
-  filtersForm.addEventListener('change', window.debounce(function () {
+  var filterAdvertsHandler = function () {
+    window.card.remove();
     selectedHousing = housing.value;
     selectedPrice = price.value;
     selectedRooms = rooms.value;
     selectedGuests = guests.value;
     window.map.renderPinsList();
-  }));
+
+    filtersForm.removeEventListener('change', filterAdvertsHandler);
+  };
+
+  var init = function () {
+    filtersForm.addEventListener('change', window.debounce(function () {
+      filterAdvertsHandler();
+    }));
+  };
+
+  disableFilters();
 
   window.filters = {
-    updatePinsList: updatePinsList
+    updatePinsList: filter,
+    disable: disableFilters,
+    enable: function () {
+      filters.classList.remove('ad-form--disabled');
+      filters.querySelector('.map__features').disabled = false;
+      var allSelectors = document.querySelectorAll('.map__filter');
+      allSelectors.forEach(function (element) {
+        element.disabled = false;
+      });
+    },
+    init: init
   };
 })();

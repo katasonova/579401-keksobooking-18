@@ -21,12 +21,12 @@
   var removeCard = function () {
     if (currentCard) {
       currentCard.remove();
+      window.pin.removeActiveClass();
     }
   };
 
   var closeCardButtonClickHandler = function (evt) {
-    var ESC_KEYCODE = 27;
-    if (evt.keyCode === ESC_KEYCODE) {
+    if (window.utils.isEscEvt(evt.keyCode)) {
       removeCard();
     }
 

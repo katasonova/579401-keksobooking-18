@@ -24,14 +24,11 @@
   var pinsList = document.querySelector('.map__pins');
   var mainPin = document.querySelector('.map__pin--main');
   var errorTemplate = document.querySelector('#error').content.querySelector('.error');
-  var filters = document.querySelector('.map__filters');
 
   var removePins = function () {
-    var pins = document.querySelectorAll('.map__pin');
+    var pins = document.querySelectorAll('.map__pin:not(.map__pin--main)');
     pins.forEach(function (pin) {
-      if (!(pin.className.includes('map__pin--main'))) {
-        pin.remove();
-      }
+      pin.remove();
     });
   };
 
@@ -49,7 +46,7 @@
   };
 
   var disableMap = function () {
-    filters.classList.add('ad-form--disabled');
+    window.filters.disable();
     document.querySelector('.map').classList.add('map--faded');
   };
 
@@ -79,20 +76,22 @@
 
     document.querySelector('.map').classList.remove('map--faded');
     document.querySelector('.ad-form').classList.remove('ad-form--disabled');
+    document.querySelector('#avatar').disabled = false;
     var allFieldsets = document.querySelectorAll('.ad-form__element');
 
     window.form.enable();
+    window.filters.enable();
 
     allFieldsets.forEach(function (element) {
       element.disabled = false;
     });
 
     window.form.setAvailability();
+    window.filters.init();
   };
 
   var buttonPinKeyDownHandler = function (evt) {
-    var ENTER_KEYCODE = 13;
-    if (evt.keyCode === ENTER_KEYCODE) {
+    if (window.utils.isEnterEvt(evt.keyCode)) {
       pinClickHandler();
     }
 
@@ -151,7 +150,8 @@
       };
     },
     movePinToDefaultPosition: movePinToDefaultPosition,
-    disableMap: disableMap,
-    renderPinsList: renderPinsList
+    disable: disableMap,
+    renderPinsList: renderPinsList,
+    removePins: removePins
   };
 })();

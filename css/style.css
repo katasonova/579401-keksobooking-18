@@ -808,11 +808,12 @@ fieldset {
 .ad-form__photo {
   margin-right: 10px;
   margin-bottom: 10px;
+  display: flex;
+  flex-wrap: wrap;
 
-  width: 70px;
+  width: 300px;
   height: 70px;
 
-  background-color: #e4e4de;
   border-radius: 5px;
 }
 
