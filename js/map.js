@@ -26,11 +26,9 @@
   var errorTemplate = document.querySelector('#error').content.querySelector('.error');
 
   var removePins = function () {
-    var pins = document.querySelectorAll('.map__pin');
+    var pins = document.querySelectorAll('.map__pin:not(.map__pin--main)');
     pins.forEach(function (pin) {
-      if (!(pin.className.includes('map__pin--main'))) {
-        pin.remove();
-      }
+      pin.remove();
     });
   };
 
@@ -89,11 +87,11 @@
     });
 
     window.form.setAvailability();
+    window.filters.init();
   };
 
   var buttonPinKeyDownHandler = function (evt) {
-    var ENTER_KEYCODE = 13;
-    if (evt.keyCode === ENTER_KEYCODE) {
+    if (window.utils.isEnterEvt(evt.keyCode)) {
       pinClickHandler();
     }
 

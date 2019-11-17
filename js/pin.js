@@ -13,18 +13,27 @@
     pinElementImg.alt = advertElement.offer.title;
     pinElement.addEventListener('click', function () {
       window.card.render(advertElement);
+      pinElement.classList.add('map__pin--active');
     });
     pinElement.addEventListener('keydown', function (evt) {
-      var ENTER_KEYCODE = 13;
-      if (evt.keyCode === ENTER_KEYCODE) {
+      if (window.utils.isEnterEvt(evt.keyCode)) {
         window.card.render(advertElement);
+        pinElement.classList.add('map__pin--active');
       }
     });
 
     return pinElement;
   };
 
+  var removeActivePinClass = function () {
+    var activePin = document.querySelector('.map__pin--active');
+    if (activePin) {
+      activePin.classList.remove('map__pin--active');
+    }
+  };
+
   window.pin = {
-    render: renderMapPin
+    render: renderMapPin,
+    removeActiveClass: removeActivePinClass
   };
 })();

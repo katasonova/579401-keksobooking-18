@@ -4,10 +4,12 @@
   var FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
 
   var avatarChooser = document.querySelector('.ad-form__field input[type=file]');
+  avatarChooser.accept = 'image/*';
   var avatarPreview = document.querySelector('.ad-form-header__preview img');
   var defaultAvatar = avatarPreview.src;
 
   var propertyImgChooser = document.querySelector('.ad-form__upload input[type=file]');
+  propertyImgChooser.accept = 'image/*';
   var propertyImg = document.querySelector('.ad-form__photo');
 
   propertyImgChooser.multiple = 'multiple';

@@ -101,14 +101,22 @@
     return filteredData;
   };
 
-  filtersForm.addEventListener('change', window.debounce(function () {
+  var filterAdvertsHandler = function () {
     window.card.remove();
     selectedHousing = housing.value;
     selectedPrice = price.value;
     selectedRooms = rooms.value;
     selectedGuests = guests.value;
     window.map.renderPinsList();
-  }));
+
+    filtersForm.removeEventListener('change', filterAdvertsHandler);
+  };
+
+  var init = function () {
+    filtersForm.addEventListener('change', window.debounce(function () {
+      filterAdvertsHandler();
+    }));
+  };
 
   disableFilters();
 
@@ -122,6 +130,7 @@
       allSelectors.forEach(function (element) {
         element.disabled = false;
       });
-    }
+    },
+    init: init
   };
 })();
