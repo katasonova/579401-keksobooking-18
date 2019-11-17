@@ -170,7 +170,7 @@
   };
 
   var revertInvalidInputState = function (input) {
-      input.style.border = 'none';
+    input.style.border = 'none';
   };
 
   form.addEventListener('submit', function (evt) {
