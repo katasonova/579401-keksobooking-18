@@ -32,7 +32,8 @@
   formAddressInput.readOnly = true;
   formTitleInput.required = true;
   formPriceInput.required = true;
-  formPriceInput.placeholder = '1000';
+  formPriceInput.placeholder = Price.FLAT + '';
+  formPriceInput.min = Price.FLAT;
 
   var getDefaultAddress = function () {
     defaultAddress = window.map.calculateDefualtAddress();
