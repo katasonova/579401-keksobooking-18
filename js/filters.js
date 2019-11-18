@@ -8,11 +8,6 @@
   var rooms = filtersForm.querySelector('#housing-rooms');
   var guests = filtersForm.querySelector('#housing-guests');
   var features = filtersForm.querySelector('#housing-features');
-  var selectedHousing = housing.value;
-  var selectedPrice = price.value;
-  var selectedRooms = rooms.value;
-  var selectedGuests = guests.value;
-  var selectedPriceRange;
 
   var disableFilters = function () {
     filters.classList.add('ad-form--disabled');
@@ -25,6 +20,8 @@
   };
 
   var filterHousing = function (array) {
+    var selectedHousing = housing.value;
+
     if (selectedHousing === 'any') {
       return array;
     }
@@ -37,6 +34,9 @@
   };
 
   var filterPrice = function (array) {
+    var selectedPrice = price.value;
+    var selectedPriceRange;
+
     if (selectedPrice === 'any') {
       return array;
     }
@@ -57,6 +57,8 @@
   };
 
   var filterRooms = function (array) {
+    var selectedRooms = rooms.value;
+
     if (selectedRooms === 'any') {
       return array;
     }
@@ -69,6 +71,8 @@
   };
 
   var filterGuests = function (array) {
+    var selectedGuests = guests.value;
+
     if (selectedGuests === 'any') {
       return array;
     }
@@ -104,10 +108,6 @@
 
   var filterAdvertsHandler = function () {
     window.card.remove();
-    selectedHousing = housing.value;
-    selectedPrice = price.value;
-    selectedRooms = rooms.value;
-    selectedGuests = guests.value;
     window.map.renderPinsList();
 
     filtersForm.removeEventListener('change', filterAdvertsHandler);
