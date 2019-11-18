@@ -152,6 +152,7 @@
     movePinToDefaultPosition: movePinToDefaultPosition,
     disable: disableMap,
     renderPinsList: renderPinsList,
-    removePins: removePins
+    removePins: removePins,
+    update: pinClickHandler
   };
 })();

@@ -21,6 +21,7 @@
     allSelectors.forEach(function (element) {
       element.disabled = true;
     });
+    filtersForm.reset();
   };
 
   var filterHousing = function (array) {
